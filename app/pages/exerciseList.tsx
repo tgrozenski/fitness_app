@@ -47,8 +47,26 @@ const exerciseList = () => {
       else {
         router.push('pages/Home');
       }
+
+      //set valid parent ID
+      var input: string;
+        if( id == 'undefined' ) {
+          input = parentID + '';
+          console.log(parentID + '');
+        }
+        else {
+          input = id;
+        }
       
-    
+      exerciseSubArr.length = 0;
+
+      exerciseData.forEach((exercise)=> {
+        if(exercise.parentID == input) {
+          console.log("found a match " + exercise.name);
+          exerciseSubArr.push(exercise);
+        }
+        
+      })
 
       useEffect(() => {
 
@@ -62,14 +80,7 @@ const exerciseList = () => {
         }
 
         //logic for which item assigned for parent id
-        var input: string;
-        if( id == 'undefined' ) {
-          input = parentID + '';
-          console.log(parentID + '');
-        }
-        else {
-          input = id;
-        }
+        
 
         const newItem: ItemData = {
           parentID: input,
@@ -87,17 +98,9 @@ const exerciseList = () => {
         }
 
         //logic for name display 
-        exerciseSubArr.length = 0;
+       
 
-        exerciseData.forEach((exercise)=> {
-          if(exercise.parentID == input) {
-            console.log("found a match " + exercise.name);
-            exerciseSubArr.push(exercise);
-          }
-          
-        })
-
-      },[parentTitle]);
+      },[]);
     
       
     const toggleEdit = () => {
