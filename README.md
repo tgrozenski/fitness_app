@@ -6,3 +6,9 @@ Interactive mode where users can step through workouts in a day with features su
 -Workouts can be marked as complete when done
 -This prompts for actual reps done and starts a timer with the rest time already set 
 -Days can be reset after they are done with a click of a button 
+
+**Main Technologies Used**
+- Expo
+- TypeScript
+- Expo Router
+  
