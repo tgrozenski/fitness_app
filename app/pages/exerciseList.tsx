@@ -1,8 +1,8 @@
 import { Button, Text, StyleSheet, FlatList, TouchableOpacity, SafeAreaView, StatusBar, View, } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import Toast from 'react-native-toast-message';
-import useRouter from "react-router";
-import { router, useGlobalSearchParams, useLocalSearchParams, Link} from "expo-router";
+import { router, useLocalSearchParams, } from "expo-router";
+import Dialog from "react-native-dialog";
 
 type ItemData = {
     parentID: string;
@@ -26,8 +26,13 @@ type ItemProps = {
 
   const Item = ({item, onPress, backgroundColor, textColor}: ItemProps) => (
     <TouchableOpacity onPress={onPress} style={[styles.item, {backgroundColor}]}>
-      <Text style={[styles.textStyle, {color: textColor}]}> Name:{item.name} Sets:{item.sets} Rest Time: {item.restTime} Target Reps: {item.targetReps} Target Weight:{item.weight}</Text>
+      <Text style={styles.title}> { item.name } </Text>
+      <Text style={styles.listItem} >Sets: { item.sets} </Text>
+      <Text style={styles.listItem}>Rest Time: { item.restTime }</Text> 
+      <Text style={styles.listItem}>Target Reps: { item.targetReps} </Text>
+      <Text style={styles.listItem}>Target Weight: { item.weight }</Text>
     </TouchableOpacity>
+    
   );
 
 const exerciseList = () => {
@@ -35,7 +40,7 @@ const exerciseList = () => {
     const [editmode, setEditmode] = useState(false);
     const [selectedID, setSelectedID] = useState('');
     const [visible, setVisible] = useState(false);
-    const [currentParent, setCurrentParent] = useState('');
+    // const [currentParent, setCurrentParent] = useState('');
     const { dayID, parentTitle } = useLocalSearchParams();
     const { parentName, parentID, exerciseID, name, sets, targetReps, weight, restTime } = useLocalSearchParams();
     
@@ -66,7 +71,30 @@ const exerciseList = () => {
           exerciseSubArr.push(exercise);
         }
         
-      })
+      });
+
+      const hide_delDialog = () => {
+        setVisible(false);
+      }
+
+      const handleDelete = () => {
+        setVisible(false);
+        //delete from both arrays
+        
+      const index = exerciseData.findIndex((item) => item.exerciseID === selectedID);
+      const index2 = exerciseSubArr.findIndex((item) => item.exerciseID === selectedID);
+
+      if (index !== -1) {
+        // Remove the object from the array using splice()
+        exerciseData.splice(index, 1);
+        exerciseSubArr.splice(index2, 1);
+        return true; // Indicate successful deletion
+      } else {
+        // Item not found
+        console.log("Item not found!")
+        return false; // Indicate unsuccessful deletion
+      }
+      }
 
       useEffect(() => {
 
@@ -131,18 +159,13 @@ const exerciseList = () => {
       }
 
       const itemTouchevent = (id: string) => {
+        setSelectedID(id);
         if (editmode) {
-          showDialog(id);
+        setVisible(true);
         } 
         else {
                  
         }
-      }
-
-      const showDialog = (id: string) => {
-        setVisible(true);
-        setSelectedID(id);
-        console.log('id:' + id + ' parentid:' + parentID);
       }
 
       const renderItem = ({item}: {item: ItemData}) => {
@@ -168,7 +191,7 @@ const exerciseList = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-          <Text style={styles.title}> { chooseParent_day() } </Text>
+          <Text style={styles.mainTitle}> { chooseParent_day() } </Text>
       <Button title="Toggle Edit" color='orange' onPress={toggleEdit}></Button>
       <FlatList
         data={exerciseSubArr}
@@ -182,6 +205,11 @@ const exerciseList = () => {
       </>
       <Button title='Create a new Exercise' color='orange' onPress={ createExercise }></Button>
       
+      <Dialog.Container visible={visible}>
+        <Dialog.Title>Are you sure you want to delete?</Dialog.Title>
+        <Dialog.Button label="Cancel" onPress={hide_delDialog} />
+        <Dialog.Button label="Delete" onPress={handleDelete} />
+      </Dialog.Container>
       </SafeAreaView>
     )};
 
@@ -192,11 +220,22 @@ const styles = StyleSheet.create({
         backgroundColor:'dodgerblue',
         borderRadius: 10
       },
+      listItem: {
+        padding: 5,
+        textAlign: 'center',
+        borderRadius:20
+      },
       item: {
         padding: 20,
         marginVertical: 8,
         marginHorizontal: 16,
-        borderRadius:20
+        borderRadius:20,
+      },
+      mainTitle: {
+        fontSize:45,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontFamily: 'AvenirNext-Bold'
       },
       title: {
         fontSize: 32,

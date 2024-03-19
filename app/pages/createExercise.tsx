@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from 'react';
 import { Button, StyleSheet, SafeAreaView, Text, View } from 'react-native';
-import { TimerPicker, TimerPickerModal } from "react-native-timer-picker";
+import { TimerPicker} from "react-native-timer-picker";
 import Dialog from "react-native-dialog";
 import { LinearGradient } from 'expo-linear-gradient';
 import Toast from 'react-native-toast-message';
@@ -56,34 +56,22 @@ const createExercisePage = () => {
     setShowsName(true);
   }
 
-  const promptName = () => {
-    setShowsName(true);
-  }
+  const promptName = () => {setShowsName(true);}
 
-  const promptSets = () => {
-    setShowSets(true);
-  }
+  const promptSets = () => {setShowSets(true);}
 
-  const promptWeight = () => {
-    setShowWeight(true);
-  }
+  const promptWeight = () => {setShowWeight(true);}
 
-  const promptTarget = () => {
-    setShowTarget(true);
-  }
+  const promptTarget = () => {setShowTarget(true);}
 
- const submitName = () => {
-    setShowsName(false);
-  }
-  const submitSets = () => {
-    setShowSets(false);
-  }
-  const submitWeight = () => {
-    setShowWeight(false);
-  }
-  const submitTarget = () => {
-    setShowTarget(false);
-  }
+  const submitName = () => {setShowsName(false);}
+
+  const submitSets = () => {setShowSets(false);}
+
+  const submitWeight = () => {setShowWeight(false);}
+
+  const submitTarget = () => {setShowTarget(false);}
+
   const saveData = () => {
     //add to array
     const newObj: exerciseData = {
@@ -127,7 +115,7 @@ const createExercisePage = () => {
                   hideMinutes={showPicker}
                   hideSeconds={showPicker}
                   onDurationChange={ (pickedDuration) => {
-                    setAlarmString( 'Minutes:' + pickedDuration.minutes + ' Seconds:' + pickedDuration.seconds);
+                    setAlarmString( pickedDuration.minutes + ':' + pickedDuration.seconds);
                     handleTimePicker; } }
                   padWithNItems={3}
                   hideHours
@@ -152,15 +140,15 @@ const createExercisePage = () => {
                       },
                   }}
               />
-            <Text>Rest Time: {alarmString} </Text>
+            <Text style={styles.options}>Rest Time: {alarmString} </Text>
             <Button title="Name your Exercise" onPress={ promptName }></Button>
-            <Text>Alarm Name: { name }</Text>
+            <Text style={styles.options}>Alarm Name: { name }</Text>
             <Button title='Set Sets' onPress={ promptSets }></Button>
-            <Text>Sets: {sets} </Text>
+            <Text style={styles.options}>Sets: {sets} </Text>
             <Button title='Set Target Weight' onPress={ promptWeight }></Button>
-            <Text>Target Weight: {weight} </Text>
+            <Text style={styles.options}>Target Weight: {weight} </Text>
             <Button title='Set Target Reps' onPress={ promptTarget }></Button>
-            <Text>Target Reps: {target}</Text>
+            <Text style={styles.options}>Target Reps: {target}</Text>
             
             <Button title='Save Exercise' onPress={ saveData }></Button>
 
@@ -204,6 +192,10 @@ const styles = StyleSheet.create({
         backgroundColor:'#202020',
         flex: 1,
         alignItems: 'center',
+    },
+    options: {
+      color: 'white',
+      fontSize: 25,
     }
 })
 
