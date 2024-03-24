@@ -12,25 +12,26 @@ type ItemData = {
     targetReps: number;
     weight: string;
     restTime: string;
+    marked: boolean;
 }
 type ItemProps = {
     item: ItemData;
     onPress: () => void;
     backgroundColor: string;
-    textColor: string;
+    color: string;
   };
 
   const exerciseData: ItemData[] = [];
 
   const exerciseSubArr: ItemData[] = [];
 
-  const Item = ({item, onPress, backgroundColor, textColor}: ItemProps) => (
-    <TouchableOpacity onPress={onPress} style={[styles.item, {backgroundColor}]}>
-      <Text style={styles.title}> { item.name } </Text>
-      <Text style={styles.listItem} >Sets: { item.sets} </Text>
-      <Text style={styles.listItem}>Rest Time: { item.restTime }</Text> 
-      <Text style={styles.listItem}>Target Reps: { item.targetReps} </Text>
-      <Text style={styles.listItem}>Target Weight: { item.weight }</Text>
+  const Item = ({item, onPress,  color, backgroundColor,}: ItemProps) => (
+    <TouchableOpacity onPress={onPress} style={[styles.item, {backgroundColor}]}> 
+      <Text style={[styles.title, {color}]}> { item.name} </Text>
+      <Text style={[styles.listItem, {color}]} >Sets: { item.sets} </Text>
+      <Text style={[styles.listItem, {color}]}>Rest Time: { item.restTime }</Text> 
+      <Text style={[styles.listItem, {color}]}>Target Reps: { item.targetReps} </Text>
+      <Text style={[styles.listItem, {color}]}>Target Weight: { item.weight }</Text>
     </TouchableOpacity>
     
   );
@@ -40,10 +41,10 @@ const exerciseList = () => {
     const [editmode, setEditmode] = useState(false);
     const [selectedID, setSelectedID] = useState('');
     const [visible, setVisible] = useState(false);
+    const [marked, setMarked] = useState(false);     
     // const [currentParent, setCurrentParent] = useState('');
     const { dayID, parentTitle } = useLocalSearchParams();
     const { parentName, parentID, exerciseID, name, sets, targetReps, weight, restTime } = useLocalSearchParams();
-    
     const id: string = dayID + '';
 
       if(parentTitle +'' != 'undefined') {
@@ -118,6 +119,7 @@ const exerciseList = () => {
           targetReps: parseInt(targetReps + ''),
           weight: weight +'',
           restTime: restTime + '',
+          marked:false
         }
         if(name +'' != 'undefined') {
           console.log("in exercise List" + newItem.parentID);
@@ -158,27 +160,44 @@ const exerciseList = () => {
         router.push({pathname: 'pages/createExercise', params: { dayID: id }})
       }
 
-      const itemTouchevent = (id: string) => {
+      const itemTouchevent = (id: string, item: ItemData) => {
         setSelectedID(id);
         if (editmode) {
         setVisible(true);
         } 
         else {
-                 
+          if(item.marked) {
+            setMarked(false);
+            item.marked = false;
+          }
+          else {
+            item.marked = true;
+            setMarked(true);
+          }
+          console.log(item.marked);
         }
       }
 
       const renderItem = ({item}: {item: ItemData}) => {
-        const backgroundColor = item.exerciseID === selectedID ? '#170f7a' : 'orange';
-        const color = item.exerciseID === selectedID ? 'white' : 'black';
+        var backgroundColor = 'red';
+        if(editmode==false){
+          if(item.marked) {
+            backgroundColor = 'green';
+          }
+          else {
+            backgroundColor = 'red';
+          }
+          
+        }
+        const color = item.exerciseID === selectedID ? 'black' : 'white';
     
         return (
           <Item
             item={item}
-            onPress={() => 
-              itemTouchevent(item.exerciseID)}
             backgroundColor={backgroundColor}
-            textColor={color}
+            color={color}
+            onPress={() => 
+              itemTouchevent(item.exerciseID, item)}
           />
         );
       };
@@ -230,6 +249,7 @@ const styles = StyleSheet.create({
         marginVertical: 8,
         marginHorizontal: 16,
         borderRadius:20,
+        backgroundColor:'orange',
       },
       mainTitle: {
         fontSize:45,

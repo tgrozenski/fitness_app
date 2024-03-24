@@ -27,7 +27,8 @@ const createExercisePage = () => {
     //prompt and set rest time
     const [showPicker, setShowPicker] = useState(false);
     const [alarmString, setAlarmString] = useState('Untitled');
-    
+    const [alarmMinute, setAlarmMinute] = useState(0);
+    const [alarmSecond, setAlarmSecond] = useState(0);    
 
     //prompt and set sets 
     const [showSets, setShowSets] = useState(false);
@@ -50,10 +51,13 @@ const createExercisePage = () => {
     
 
     //Handle time
-  const handleTimePicker = () => {
-    console.log(alarmString);
-    setShowPicker(showPicker == false)
-    setShowsName(true);
+  const handleTimePicker = (minute: number, second: number) => {
+    console.log(' ALARM MINUTE AND SECOND' + alarmMinute + ' : ' + alarmSecond);
+    const alarmFormat = formatTime(minute, second);
+    console.log(alarmFormat);
+    setAlarmString(alarmFormat +'');
+    console.log('AlarmString ' + alarmString);
+    // setShowPicker(showPicker == false)
   }
 
   const promptName = () => {setShowsName(true);}
@@ -106,6 +110,24 @@ const createExercisePage = () => {
       text1: message,
     })
   }
+
+  const formatTime = (hour: number, minute: number) => {
+    var timeString = ''; 
+    if(hour < 10) {
+      timeString+= ('0' + hour); 
+    }
+    else{
+      timeString += hour;
+    }
+    timeString+= ":"
+    if(minute < 10) {
+      timeString+= ('0' + minute);
+    }
+    else {
+      timeString += minute;
+    }
+    return timeString;
+  }
   
   
     return (
@@ -115,8 +137,9 @@ const createExercisePage = () => {
                   hideMinutes={showPicker}
                   hideSeconds={showPicker}
                   onDurationChange={ (pickedDuration) => {
-                    setAlarmString( pickedDuration.minutes + ':' + pickedDuration.seconds);
-                    handleTimePicker; } }
+                    // setAlarmSecond(pickedDuration.seconds);
+                    // setAlarmMinute(pickedDuration.minutes);
+                    handleTimePicker(pickedDuration.minutes, pickedDuration.seconds); } }
                   padWithNItems={3}
                   hideHours
                   minuteLabel="min"
