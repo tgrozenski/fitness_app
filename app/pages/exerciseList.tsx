@@ -42,6 +42,7 @@ const exerciseList = () => {
     const [selectedID, setSelectedID] = useState('');
     const [visible, setVisible] = useState(false);
     const [marked, setMarked] = useState(false);     
+    const [compVisible, setCompVisible] = useState(false);
     // const [currentParent, setCurrentParent] = useState('');
     const { dayID, parentTitle } = useLocalSearchParams();
     const { parentName, parentID, exerciseID, name, sets, targetReps, weight, restTime } = useLocalSearchParams();
@@ -84,7 +85,7 @@ const exerciseList = () => {
         
       const index = exerciseData.findIndex((item) => item.exerciseID === selectedID);
       const index2 = exerciseSubArr.findIndex((item) => item.exerciseID === selectedID);
-
+      
       if (index !== -1) {
         // Remove the object from the array using splice()
         exerciseData.splice(index, 1);
@@ -110,7 +111,6 @@ const exerciseList = () => {
 
         //logic for which item assigned for parent id
         
-
         const newItem: ItemData = {
           parentID: input,
           exerciseID: exerciseID +'',
@@ -126,10 +126,6 @@ const exerciseList = () => {
         exerciseData.push(newItem)
         
         }
-
-        //logic for name display 
-       
-
       },[]);
     
       
@@ -146,6 +142,17 @@ const exerciseList = () => {
         }
       }
 
+    const handleComplete = () => {
+      setCompVisible(false);
+    }
+
+    const handleCompleteTimer = () => {
+        //set a timer here
+        setCompVisible(false);
+        const item = exerciseSubArr.find((item) => item.exerciseID === selectedID);
+        console.log("timer should be started Here! " + item?.restTime);
+    }
+    
       const chooseParent_day = () => {
         if (parentTitle != 'undefined') {
           return parentTitle;
@@ -160,21 +167,29 @@ const exerciseList = () => {
         router.push({pathname: 'pages/createExercise', params: { dayID: id }})
       }
 
+      const unmarkAll = () => {
+        for(var i = 0; i < exerciseSubArr.length; i++) {
+          exerciseSubArr[i].marked = false;
+        }
+        //setMarked(false);
+      }
+
       const itemTouchevent = (id: string, item: ItemData) => {
         setSelectedID(id);
         if (editmode) {
         setVisible(true);
         } 
         else {
-          if(item.marked) {
-            setMarked(false);
-            item.marked = false;
-          }
-          else {
-            item.marked = true;
-            setMarked(true);
-          }
-          console.log(item.marked);
+        if(item.marked) {
+          setMarked(false);
+          item.marked = false;
+        }
+        else {
+          setCompVisible(true);
+          item.marked = true;
+          setMarked(true);
+        }
+        console.log(item.marked);
         }
       }
 
@@ -211,7 +226,10 @@ const exerciseList = () => {
     return (
         <SafeAreaView style={styles.container}>
           <Text style={styles.mainTitle}> { chooseParent_day() } </Text>
+      <View style={{flexDirection: 'row', justifyContent: 'space-evenly', padding: 20}}>
       <Button title="Toggle Edit" color='orange' onPress={toggleEdit}></Button>
+      <Button title="Mark All incomplete" color='orange' onPress={unmarkAll}/>
+      </View>
       <FlatList
         data={exerciseSubArr}
         renderItem={renderItem}
@@ -223,7 +241,11 @@ const exerciseList = () => {
       </Toast>
       </>
       <Button title='Create a new Exercise' color='orange' onPress={ createExercise }></Button>
-      
+     <Dialog.Container visible={compVisible}>
+      <Dialog.Title>Start of Skip Timer?</Dialog.Title>
+        <Dialog.Button label="Start Timer" onPress={handleCompleteTimer} />
+        <Dialog.Button label="Skip Timer" onPress={handleComplete} />
+      </Dialog.Container> 
       <Dialog.Container visible={visible}>
         <Dialog.Title>Are you sure you want to delete?</Dialog.Title>
         <Dialog.Button label="Cancel" onPress={hide_delDialog} />
