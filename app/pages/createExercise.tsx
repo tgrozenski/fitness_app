@@ -1,11 +1,11 @@
 import React, { useState, useEffect} from 'react';
-import { Button, StyleSheet, SafeAreaView, Text, View } from 'react-native';
+import { Button, StyleSheet, SafeAreaView, Text, View, Pressable } from 'react-native';
 import { TimerPicker} from "react-native-timer-picker";
 import Dialog from "react-native-dialog";
+import { Divider } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import Toast from 'react-native-toast-message';
 import { router, useLocalSearchParams, } from "expo-router";
-
 
 //create a type 
 type exerciseData = {
@@ -132,7 +132,7 @@ const createExercisePage = () => {
   
     return (
         <SafeAreaView style={styles.container}>
-            
+         <Text style={styles.options}> Select your Rest Time: </Text>  
             <TimerPicker 
                   hideMinutes={showPicker}
                   hideSeconds={showPicker}
@@ -163,17 +163,47 @@ const createExercisePage = () => {
                       },
                   }}
               />
-            <Text style={styles.options}>Rest Time: {alarmString} </Text>
-            <Button title="Name your Exercise" onPress={ promptName }></Button>
-            <Text style={styles.options}>Alarm Name: { name }</Text>
-            <Button title='Set Sets' onPress={ promptSets }></Button>
-            <Text style={styles.options}>Sets: {sets} </Text>
-            <Button title='Set Target Weight' onPress={ promptWeight }></Button>
-            <Text style={styles.options}>Target Weight: {weight} </Text>
-            <Button title='Set Target Reps' onPress={ promptTarget }></Button>
-            <Text style={styles.options}>Target Reps: {target}</Text>
+            <View >
+            <Divider />
+            <Pressable onPress={ promptName }> 
+            <Text style={styles.pressables}>
+            Click To Set Exercise Name: {name}
+            </Text>
+            </Pressable>
             
-            <Button title='Save Exercise' onPress={ saveData }></Button>
+            <Divider />
+            
+            <Pressable onPress={ promptSets }> 
+            <Text style={styles.pressables}>
+            Sets: {sets} 
+            </Text>
+            </Pressable>
+           
+           <Divider />
+           
+            <Pressable onPress={ promptWeight }> 
+            <Text style={styles.pressables}>
+            Target Weight: {weight} 
+            </Text>
+            </Pressable>
+            
+           <Divider />
+
+            <Pressable onPress={ promptTarget }>
+            <Text style={styles.pressables}>
+            Target Reps: {target}
+           </Text>  
+           </Pressable>
+
+           <Divider />
+           </View>
+
+            <Pressable  onPress={ saveData }> 
+            <Text style={styles.pressables}>
+            Save Exercise
+            </Text> 
+            </Pressable>
+        
 
             <Dialog.Container visible={showSets}>
                 <Dialog.Title>Exercise sets?</Dialog.Title>
@@ -219,7 +249,14 @@ const styles = StyleSheet.create({
     options: {
       color: 'white',
       fontSize: 25,
-    }
+      padding: 20,
+    },
+    pressables: {
+      color: '#007AFF', 
+      fontSize: 20,
+      padding: 20,
+      textAlign: 'center',
+    },
 })
 
 export default createExercisePage;
