@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Toast from 'react-native-toast-message';
 import { router, useLocalSearchParams, } from "expo-router";
 import Dialog from "react-native-dialog";
+import Timer from '../components/timer';
 
 type ItemData = {
     parentID: string;
@@ -43,6 +44,7 @@ const exerciseList = () => {
     const [visible, setVisible] = useState(false);
     const [marked, setMarked] = useState(false);     
     const [compVisible, setCompVisible] = useState(false);
+    const [alarmString, setAlarmString] = useState('');
     // const [currentParent, setCurrentParent] = useState('');
     const { dayID, parentTitle } = useLocalSearchParams();
     const { parentName, parentID, exerciseID, name, sets, targetReps, weight, restTime } = useLocalSearchParams();
@@ -150,7 +152,8 @@ const exerciseList = () => {
         //set a timer here
         setCompVisible(false);
         const item = exerciseSubArr.find((item) => item.exerciseID === selectedID);
-        console.log("timer should be started Here! " + item?.restTime);
+        setAlarmString(item?.restTime + '');
+        console.log("timer should be started Here! " + alarmString);
     }
     
       const chooseParent_day = () => {
@@ -171,7 +174,6 @@ const exerciseList = () => {
         for(var i = 0; i < exerciseSubArr.length; i++) {
           exerciseSubArr[i].marked = false;
         }
-        //setMarked(false);
       }
 
       const itemTouchevent = (id: string, item: ItemData) => {
@@ -230,6 +232,7 @@ const exerciseList = () => {
       <Button title="Toggle Edit" color='orange' onPress={toggleEdit}></Button>
       <Button title="Mark All incomplete" color='orange' onPress={unmarkAll}/>
       </View>
+    <Timer alarmString={alarmString} ></Timer>  
       <FlatList
         data={exerciseSubArr}
         renderItem={renderItem}
