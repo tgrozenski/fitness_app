@@ -42,10 +42,9 @@ const exerciseList = () => {
     const [editmode, setEditmode] = useState(false);
     const [selectedID, setSelectedID] = useState('');
     const [visible, setVisible] = useState(false);
-    const [marked, setMarked] = useState(false);     
+    const [marked, setMarked] = useState(0);     
     const [compVisible, setCompVisible] = useState(false);
     const [alarmString, setAlarmString] = useState('');
-    // const [currentParent, setCurrentParent] = useState('');
     const { dayID, parentTitle } = useLocalSearchParams();
     const { parentName, parentID, exerciseID, name, sets, targetReps, weight, restTime } = useLocalSearchParams();
     const id: string = dayID + '';
@@ -174,6 +173,7 @@ const exerciseList = () => {
         for(var i = 0; i < exerciseSubArr.length; i++) {
           exerciseSubArr[i].marked = false;
         }
+        setMarked(marked + 1);
       }
 
       const itemTouchevent = (id: string, item: ItemData) => {
@@ -183,18 +183,38 @@ const exerciseList = () => {
         } 
         else {
         if(item.marked) {
-          setMarked(false);
+          setMarked(marked + 1);
           item.marked = false;
         }
         else {
           setCompVisible(true);
           item.marked = true;
-          setMarked(true);
+          setMarked(marked + 1);
         }
         console.log(item.marked);
         }
       }
 
+      const stringtoMili = (alarm: String): number => {
+        var i = 0;
+        var mili: number = 0; 
+        switch(i) {
+            case 0: 
+            mili += (parseInt(alarm[i]) * 10) * 60000;
+            i++;
+            case 1: 
+            mili+= (parseInt(alarm[i])) * 60000;  
+            i++;
+            case 2: 
+            i++;
+            case 3: 
+            mili += (parseInt(alarm[i]) * 10) * 1000
+            i++;
+            case 4:
+            mili += (parseInt(alarm[i])) * 1000
+        }
+        return mili;
+    }
       const renderItem = ({item}: {item: ItemData}) => {
         var backgroundColor = 'red';
         if(editmode==false){
@@ -218,6 +238,21 @@ const exerciseList = () => {
           />
         );
       };
+
+    const timerComponent = () => {
+      const time: number = stringtoMili(alarmString) / 1000; 
+      console.log("Timer component: alarmstring-> " + alarmString + " time var --> " + time);
+      if (time > 0) {
+        return(
+        <Timer SEC={time} ></Timer>  
+        );
+      }
+      else {
+        return(
+          <View></View>
+        );
+      }
+    }
       const showToast = (message: string) => {
         Toast.show({
           type: 'success',
@@ -232,7 +267,7 @@ const exerciseList = () => {
       <Button title="Toggle Edit" color='orange' onPress={toggleEdit}></Button>
       <Button title="Mark All incomplete" color='orange' onPress={unmarkAll}/>
       </View>
-    <Timer alarmString={alarmString} ></Timer>  
+        {timerComponent()}
       <FlatList
         data={exerciseSubArr}
         renderItem={renderItem}
@@ -330,6 +365,14 @@ const styles = StyleSheet.create({
       modalText: {
         marginBottom: 15,
         textAlign: 'center',
+      },
+      timer_text: {
+        justifyContent: 'center',
+        color: 'white',
+        fontSize: 40,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontFamily: 'AvenirNext-Bold'
       },
   }); 
 export default exerciseList;

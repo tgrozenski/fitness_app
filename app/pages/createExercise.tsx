@@ -132,39 +132,8 @@ const createExercisePage = () => {
   
     return (
         <SafeAreaView style={styles.container}>
-         <Text style={styles.options}> Select your Rest Time: </Text>  
-            <TimerPicker 
-                  hideMinutes={showPicker}
-                  hideSeconds={showPicker}
-                  onDurationChange={ (pickedDuration) => {
-                    // setAlarmSecond(pickedDuration.seconds);
-                    // setAlarmMinute(pickedDuration.minutes);
-                    handleTimePicker(pickedDuration.minutes, pickedDuration.seconds); } }
-                  padWithNItems={3}
-                  hideHours
-                  minuteLabel="min"
-                  secondLabel="sec"
-                  LinearGradient={LinearGradient}
-        
-                  styles={{
-                      theme:'dark',
-                      pickerItem: {
-                          fontSize: 34,
-                      },
-                      pickerLabel: {
-                          fontSize: 26,
-                          right: -20,
-                      },
-                      pickerLabelContainer: {
-                          width: 60,
-                      },
-                      pickerItemContainer: {
-                          width: 150,
-                      },
-                  }}
-              />
-            <View >
-            <Divider />
+            <View>
+              <Text style={{padding: 10}}></Text> 
             <Pressable onPress={ promptName }> 
             <Text style={styles.pressables}>
             Click To Set Exercise Name: {name}
@@ -196,6 +165,35 @@ const createExercisePage = () => {
            </Pressable>
 
            <Divider />
+            <Text style={styles.options}> Select your Rest Time: </Text>  
+            <TimerPicker 
+                  hideMinutes={showPicker}
+                  hideSeconds={showPicker}
+                  onDurationChange={ (pickedDuration) => {
+                    handleTimePicker(pickedDuration.minutes, pickedDuration.seconds); } }
+                  padWithNItems={3}
+                  hideHours
+                  minuteLabel="min"
+                  secondLabel="sec"
+                  LinearGradient={LinearGradient}
+        
+                  styles={{
+                      theme:'dark',
+                      pickerItem: {
+                          fontSize: 34,
+                      },
+                      pickerLabel: {
+                          fontSize: 26,
+                          right: -20,
+                      },
+                      pickerLabelContainer: {
+                          width: 60,
+                      },
+                      pickerItemContainer: {
+                          width: 150,
+                      },
+                  }}
+              />
            </View>
 
             <Pressable  onPress={ saveData }> 
