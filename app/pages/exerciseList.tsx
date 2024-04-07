@@ -82,54 +82,45 @@ const exerciseList = () => {
 
       const handleDelete = () => {
         setVisible(false);
-        //delete from both arrays
         
       const index = exerciseData.findIndex((item) => item.exerciseID === selectedID);
       const index2 = exerciseSubArr.findIndex((item) => item.exerciseID === selectedID);
       
       if (index !== -1) {
-        // Remove the object from the array using splice()
         exerciseData.splice(index, 1);
         exerciseSubArr.splice(index2, 1);
-        return true; // Indicate successful deletion
+        return true; 
       } else {
-        // Item not found
         console.log("Item not found!")
-        return false; // Indicate unsuccessful deletion
+        return false; 
       }
       }
 
-      useEffect(() => {
-
-        if(dayID + '' != 'undefined') {
-          
-          console.log('here is your id -->' + id + 'here is parent title -->' + parentTitle);
-          
-        }
-        else if (parentID + '' != 'undefined') {
-          console.log("not undefined");
-        }
-
-        //logic for which item assigned for parent id
+      if(dayID + '' != 'undefined') {
         
-        const newItem: ItemData = {
-          parentID: input,
-          exerciseID: exerciseID +'',
-          name: name +'',
-          sets: parseInt(sets +''),
-          targetReps: parseInt(targetReps + ''),
-          weight: weight +'',
-          restTime: restTime + '',
-          marked:false
-        }
-        if(name +'' != 'undefined') {
-          console.log("in exercise List" + newItem.parentID);
-        exerciseData.push(newItem)
+        console.log('here is your id -->' + id + 'here is parent title -->' + parentTitle);
         
-        }
-      },[]);
+      }
+      else if (parentID + '' != 'undefined') {
+        console.log("not undefined");
+      }
+
+      const newItem: ItemData = {
+        parentID: input,
+        exerciseID: exerciseID +'',
+        name: name +'',
+        sets: parseInt(sets +''),
+        targetReps: parseInt(targetReps + ''),
+        weight: weight +'',
+        restTime: restTime + '',
+        marked:false
+      }
+
+      if(name +'' != 'undefined') {
+        console.log("in exercise List" + newItem.parentID);
+      exerciseData.push(newItem)
+      }
     
-      
     const toggleEdit = () => {
         if (editmode) {
           setEditmode(false);
@@ -148,14 +139,12 @@ const exerciseList = () => {
     }
 
     const handleCompleteTimer = () => {
-        //set a timer here
         setCompVisible(false);
         const item = exerciseSubArr.find((item) => item.exerciseID === selectedID);
         setAlarmString(item?.restTime + '');
-        console.log("timer should be started Here! " + alarmString);
     }
     
-      const chooseParent_day = () => {
+    const chooseParent_day = () => {
         if (parentTitle != 'undefined') {
           return parentTitle;
         }
@@ -214,7 +203,7 @@ const exerciseList = () => {
             mili += (parseInt(alarm[i])) * 1000
         }
         return mili;
-    }
+        }
       const renderItem = ({item}: {item: ItemData}) => {
         var backgroundColor = 'red';
         if(editmode==false){
@@ -240,11 +229,11 @@ const exerciseList = () => {
       };
 
     const timerComponent = () => {
-      const time: number = stringtoMili(alarmString) / 1000; 
-      console.log("Timer component: alarmstring-> " + alarmString + " time var --> " + time);
-      if (time > 0) {
+      const seconds: number = stringtoMili(alarmString) / 1000; 
+      console.log("Timer component: alarmstring-> " + alarmString + " seconds var --> " + seconds);
+      if (seconds > 0) {
         return(
-        <Timer SEC={time} ></Timer>  
+        <Timer SEC={seconds} ></Timer>  
         );
       }
       else {

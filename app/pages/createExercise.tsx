@@ -7,7 +7,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Toast from 'react-native-toast-message';
 import { router, useLocalSearchParams, } from "expo-router";
 
-//create a type 
 type exerciseData = {
     parentID: string;
     exerciseID:string;
@@ -24,21 +23,12 @@ var counter = 0;
 
 const createExercisePage = () => {
     
-    //prompt and set rest time
     const [showPicker, setShowPicker] = useState(false);
     const [alarmString, setAlarmString] = useState('Untitled');
-    const [alarmMinute, setAlarmMinute] = useState(0);
-    const [alarmSecond, setAlarmSecond] = useState(0);    
-
-    //prompt and set sets 
     const [showSets, setShowSets] = useState(false);
     const [sets, setSets] = useState(0);
-
-    //prompt and set name
     const [showName, setShowsName] = useState(false);
     const [name, setName] = useState('Untitled');
-
-    //prompt and set target Reps
     const [showTarget, setShowTarget] = useState(false);
     const [target, setTarget] = useState(0);
 
@@ -52,7 +42,6 @@ const createExercisePage = () => {
 
     //Handle time
   const handleTimePicker = (minute: number, second: number) => {
-    console.log(' ALARM MINUTE AND SECOND' + alarmMinute + ' : ' + alarmSecond);
     const alarmFormat = formatTime(minute, second);
     console.log(alarmFormat);
     setAlarmString(alarmFormat +'');
@@ -61,23 +50,15 @@ const createExercisePage = () => {
   }
 
   const promptName = () => {setShowsName(true);}
-
   const promptSets = () => {setShowSets(true);}
-
   const promptWeight = () => {setShowWeight(true);}
-
   const promptTarget = () => {setShowTarget(true);}
-
   const submitName = () => {setShowsName(false);}
-
   const submitSets = () => {setShowSets(false);}
-
   const submitWeight = () => {setShowWeight(false);}
-
   const submitTarget = () => {setShowTarget(false);}
 
   const saveData = () => {
-    //add to array
     const newObj: exerciseData = {
       parentID: dayID + '',
       exerciseID: counter+'',
@@ -87,17 +68,13 @@ const createExercisePage = () => {
       weight: weight,
       restTime: alarmString
     };
-
-    //increment counter 
     counter++;
 
     exerciseArr.push(newObj);
     
     console.log('In createExercise dayID is  ' + dayID );
-    //display a toast indicating saved 
     showToast('Exercise Saved');
     console.log(newObj);
-    //reroute to exerciseList Page 
     router.replace({ pathname:'pages/exerciseList', params: { 
       parentID: newObj.parentID, exerciseID: newObj.exerciseID, name: name, 
       sets: newObj.sets, targetReps: newObj.targetReps, weight: newObj.weight, 

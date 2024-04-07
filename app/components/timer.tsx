@@ -1,12 +1,10 @@
-import { Button, Text, StyleSheet, FlatList, TouchableOpacity, Pressable, StatusBar, View, } from 'react-native';
+import { Text, StyleSheet, Pressable, View, } from 'react-native';
 import React, { useState, useEffect } from 'react';
 
 
 export default function Timer( {SEC} : {SEC: number}) {
 
     const [state, setState] = useState("Stop");
-    const [timerStr, setTimerStr] = useState<string>();
-    const alarmString = "00:00"
     const[timeLeft, setTimeLeft] = useState(SEC);
     
     console.log("Timer Component is being called and rendered SEC passed--> " + SEC);
@@ -31,13 +29,6 @@ export default function Timer( {SEC} : {SEC: number}) {
         return mili;
     }
    
-    var second: number;
-    if(!alarmString) {
-        second = 0;    
-    }
-    else {
-    second = (stringtoMili(alarmString) / 1000);
-    }
 
     const handleTouch = () => {
         if (state == "Stop") {
