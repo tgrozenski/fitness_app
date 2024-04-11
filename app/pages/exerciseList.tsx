@@ -29,10 +29,14 @@ type ItemProps = {
   const Item = ({item, onPress,  color, backgroundColor,}: ItemProps) => (
     <TouchableOpacity onPress={onPress} style={[styles.item, {backgroundColor}]}> 
       <Text style={[styles.title, {color}]}> { item.name} </Text>
+      <View style={styles.listItems}> 
       <Text style={[styles.listItem, {color}]} >Sets: { item.sets} </Text>
       <Text style={[styles.listItem, {color}]}>Rest Time: { item.restTime }</Text> 
+      </View>
+      <View style={ styles.listItems }>
       <Text style={[styles.listItem, {color}]}>Target Reps: { item.targetReps} </Text>
       <Text style={[styles.listItem, {color}]}>Target Weight: { item.weight }</Text>
+      </View>
     </TouchableOpacity>
     
   );
@@ -40,6 +44,7 @@ type ItemProps = {
 const exerciseList = () => {
 
     const [editmode, setEditmode] = useState(false);
+    const [editItemsmode, setEditItemsmode] = useState(false);
     const [selectedID, setSelectedID] = useState('');
     const [visible, setVisible] = useState(false);
     const [marked, setMarked] = useState(0);     
@@ -129,7 +134,7 @@ const exerciseList = () => {
         }
         else {
           setEditmode(true);
-          console.log("edit mode enabled")
+          console.log("Select an Item to DeletSelect an Item to Deletee")
           showToast("Edit Mode Enabled");
         }
       }
@@ -165,11 +170,21 @@ const exerciseList = () => {
         setMarked(marked + 1);
       }
 
+      const handleEdit = () => {
+        setVisible(false)
+        const Item = exerciseSubArr.find((item) => item.exerciseID === selectedID);
+        handleDelete();
+        router.push({pathname: "pages/editExercise", 
+          params: { itemID: Item?.exerciseID, itemName: Item?.name, itemSets: Item?.sets, itemWeight: Item?.weight, 
+            itemReps: Item?.targetReps, itemRestTime: Item?.restTime}})
+          setMarked(marked +1);
+      }
+
       const itemTouchevent = (id: string, item: ItemData) => {
         setSelectedID(id);
         if (editmode) {
         setVisible(true);
-        } 
+        }
         else {
         if(item.marked) {
           setMarked(marked + 1);
@@ -274,9 +289,10 @@ const exerciseList = () => {
         <Dialog.Button label="Skip Timer" onPress={handleComplete} />
       </Dialog.Container> 
       <Dialog.Container visible={visible}>
-        <Dialog.Title>Are you sure you want to delete?</Dialog.Title>
+        <Dialog.Title>What do you want to do?</Dialog.Title>
         <Dialog.Button label="Cancel" onPress={hide_delDialog} />
         <Dialog.Button label="Delete" onPress={handleDelete} />
+        <Dialog.Button label="Edit" onPress={handleEdit}></Dialog.Button>
       </Dialog.Container>
       </SafeAreaView>
     )};
@@ -363,5 +379,9 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: 'AvenirNext-Bold'
       },
+      listItems: {
+        flexDirection: 'row',    
+        justifyContent: 'space-around'
+      }
   }); 
 export default exerciseList;
