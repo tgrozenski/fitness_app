@@ -44,16 +44,14 @@ type ItemProps = {
 const exerciseList = () => {
 
     const [editmode, setEditmode] = useState(false);
-    const [editItemsmode, setEditItemsmode] = useState(false);
     const [selectedID, setSelectedID] = useState('');
     const [visible, setVisible] = useState(false);
     const [marked, setMarked] = useState(0);     
     const [compVisible, setCompVisible] = useState(false);
     const [alarmString, setAlarmString] = useState('');
-    const { dayID, parentTitle } = useLocalSearchParams();
+    const { dayID, parentTitle, newObj } = useLocalSearchParams();
     const { parentName, parentID, exerciseID, name, sets, targetReps, weight, restTime } = useLocalSearchParams();
-    const id: string = dayID + '';
-
+      
       if(parentTitle +'' != 'undefined') {
         console.log("Parent Title!!!" + {parentTitle})
       }
@@ -63,12 +61,12 @@ const exerciseList = () => {
 
       //set valid parent ID
       var input: string;
-        if( id == 'undefined' ) {
+        if( dayID + '' == 'undefined' ) {
           input = parentID + '';
           console.log(parentID + '');
         }
         else {
-          input = id;
+          input = dayID + '';
         }
       
       exerciseSubArr.length = 0;
@@ -103,7 +101,7 @@ const exerciseList = () => {
 
       if(dayID + '' != 'undefined') {
         
-        console.log('here is your id -->' + id + 'here is parent title -->' + parentTitle);
+        console.log('here is your id -->' + dayID + 'here is parent title -->' + parentTitle);
         
       }
       else if (parentID + '' != 'undefined') {
@@ -160,7 +158,7 @@ const exerciseList = () => {
       }
 
       const createExercise = () => {
-        router.push({pathname: 'pages/createExercise', params: { dayID: id }})
+        router.push({pathname: 'pages/createExercise', params: { dayID: dayID}})
       }
 
       const unmarkAll = () => {
@@ -175,7 +173,7 @@ const exerciseList = () => {
         const Item = exerciseSubArr.find((item) => item.exerciseID === selectedID);
         handleDelete();
         router.push({pathname: "pages/editExercise", 
-          params: { itemID: Item?.exerciseID, itemName: Item?.name, itemSets: Item?.sets, itemWeight: Item?.weight, 
+          params: {parentID: Item?.parentID, itemID: Item?.exerciseID, itemName: Item?.name, itemSets: Item?.sets, itemWeight: Item?.weight, 
             itemReps: Item?.targetReps, itemRestTime: Item?.restTime}})
           setMarked(marked +1);
       }

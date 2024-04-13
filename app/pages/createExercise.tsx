@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, } from 'react';
 import { Button, StyleSheet, SafeAreaView, Text, View, Pressable } from 'react-native';
 import { TimerPicker} from "react-native-timer-picker";
 import Dialog from "react-native-dialog";
@@ -15,14 +15,11 @@ type exerciseData = {
     targetReps: number;
     weight: string;
     restTime: string;
-    
   }
-const exerciseArr: exerciseData[] = [];
 
-var counter = 0; 
+  var count = 0; 
 
 const createExercisePage = () => {
-    
     const [showPicker, setShowPicker] = useState(false);
     const [alarmString, setAlarmString] = useState('Untitled');
     const [showSets, setShowSets] = useState(false);
@@ -31,22 +28,16 @@ const createExercisePage = () => {
     const [name, setName] = useState('Untitled');
     const [showTarget, setShowTarget] = useState(false);
     const [target, setTarget] = useState(0);
-
-    //prompt and set weight 
     const [showWeight, setShowWeight] = useState(false);
     const [weight, setWeight] = useState('Undefined');
 
-    const { dayID } = useLocalSearchParams();
-
+    const { dayID, parentName, } = useLocalSearchParams();
     
-
-    //Handle time
   const handleTimePicker = (minute: number, second: number) => {
     const alarmFormat = formatTime(minute, second);
     console.log(alarmFormat);
     setAlarmString(alarmFormat +'');
     console.log('AlarmString ' + alarmString);
-    // setShowPicker(showPicker == false)
   }
 
   const promptName = () => {setShowsName(true);}
@@ -61,16 +52,14 @@ const createExercisePage = () => {
   const saveData = () => {
     const newObj: exerciseData = {
       parentID: dayID + '',
-      exerciseID: counter+'',
+      exerciseID: count + '',
       name: name,
       sets: sets,
       targetReps: target,
       weight: weight,
       restTime: alarmString
     };
-    counter++;
-
-    exerciseArr.push(newObj);
+    count++;
     
     console.log('In createExercise dayID is  ' + dayID );
     showToast('Exercise Saved');
@@ -78,8 +67,8 @@ const createExercisePage = () => {
     router.replace({ pathname:'pages/exerciseList', params: { 
       parentID: newObj.parentID, exerciseID: newObj.exerciseID, name: name, 
       sets: newObj.sets, targetReps: newObj.targetReps, weight: newObj.weight, 
-      restTime: newObj.restTime } });
-  }
+      restTime: newObj.restTime, parentName: parentName } });
+    }
 
   const showToast = (message: string) => {
     Toast.show({
@@ -91,7 +80,7 @@ const createExercisePage = () => {
   const formatTime = (hour: number, minute: number) => {
     var timeString = ''; 
     if(hour < 10) {
-      timeString+= ('0' + hour); 
+      timeString+= (hour); 
     }
     else{
       timeString += hour;

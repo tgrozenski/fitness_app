@@ -18,32 +18,21 @@ type exerciseData = {
     restTime: string;
     
   }
-const exerciseArr: exerciseData[] = [];
-
-var counter = 0; 
 
 const createExercisePage = () => {
   
-    const { itemID, itemName, itemReps, itemRestTime, itemSets, itemWeight } = useLocalSearchParams();
+    const { parentID, itemID, itemName, itemReps, itemRestTime, itemSets, itemWeight } = useLocalSearchParams();
     const [showPicker, setShowPicker] = useState(false);
     const [alarmString, setAlarmString] = useState(itemRestTime);
     const [showSets, setShowSets] = useState(false);
-    const [sets, setSets] = useState(itemSets);
+    const [sets, setSets] = useState(Number(itemSets));
     const [showName, setShowsName] = useState(false);
     const [name, setName] = useState(itemName);
     const [showTarget, setShowTarget] = useState(false);
-    const [target, setTarget] = useState(itemReps);
-
-    //prompt and set weight 
+    const [target, setTarget] = useState(Number(itemReps));
     const [showWeight, setShowWeight] = useState(false);
     const [weight, setWeight] = useState(itemWeight);
-
-    const { dayID } = useLocalSearchParams();
     
-    
-    console.log("In Create Exercise: " + itemName);
-
-    //Handle time
   const handleTimePicker = (minute: number, second: number) => {
     const alarmFormat = formatTime(minute, second);
     console.log(alarmFormat);
@@ -61,21 +50,26 @@ const createExercisePage = () => {
   const submitTarget = () => {setShowTarget(false);}
 
   const saveData = () => {
-    //Instead of pushing data change find object and change fields 
+    const newObj: exerciseData = {
+      parentID: parentID + '',
+      exerciseID: itemID + '', 
+      name: name + '',
+      sets: sets,
+      targetReps: target,
+      weight: weight + '',
+      restTime: alarmString + '',
+    };
+    router.replace({ pathname:'pages/exerciseList', params: { 
+      parentID: newObj.parentID, exerciseID: newObj.exerciseID, name: name, 
+      sets: newObj.sets, targetReps: newObj.targetReps, weight: newObj.weight, 
+      restTime: newObj.restTime, newObj } });
     
-  }
-
-  const showToast = (message: string) => {
-    Toast.show({
-      type: 'success',
-      text1: message,
-    })
   }
 
   const formatTime = (hour: number, minute: number) => {
     var timeString = ''; 
     if(hour < 10) {
-      timeString+= ('0' + hour); 
+      timeString += (hour); 
     }
     else{
       timeString += hour;
@@ -168,7 +162,7 @@ const createExercisePage = () => {
                 <Dialog.Title>Exercise sets?</Dialog.Title>
                 <Dialog.Input 
                 placeholder="Enter the number of sets"
-                onChangeText={sets => setSets(sets)}>
+                onChangeText={sets  => setSets(parseInt(sets))}>
                 </Dialog.Input>
                 <Dialog.Button label="Submit" onPress={submitSets} />
             </Dialog.Container>
@@ -184,7 +178,7 @@ const createExercisePage = () => {
                 <Dialog.Title>Target Reps?</Dialog.Title>
                 <Dialog.Input 
                 placeholder="Enter the target rep number!"
-                onChangeText={target => setTarget(target)}>
+                onChangeText={target => setTarget(parseInt(target))}>
                 </Dialog.Input>
                 <Dialog.Button label="Submit" onPress={submitTarget} />
             </Dialog.Container>
