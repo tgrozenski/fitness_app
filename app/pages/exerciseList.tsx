@@ -242,7 +242,7 @@ const exerciseList = () => {
       };
 
     const timerComponent = () => {
-      const seconds: number = stringtoMili(alarmString) / 1000; 
+      const seconds: number = stringtoMili(alarmString + '') / 1000; 
       console.log("Timer component: alarmstring-> " + alarmString + " seconds var --> " + seconds);
       if (seconds > 0) {
         return(

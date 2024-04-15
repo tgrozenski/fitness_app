@@ -69,7 +69,7 @@ const createExercisePage = () => {
   const formatTime = (hour: number, minute: number) => {
     var timeString = ''; 
     if(hour < 10) {
-      timeString += (hour); 
+      timeString += ("0" + hour); 
     }
     else{
       timeString += hour;
