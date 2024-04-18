@@ -8,27 +8,6 @@ export default function Timer( {SEC} : {SEC: number}) {
     const[timeLeft, setTimeLeft] = useState(SEC);
     
     console.log("Timer Component is being called and rendered SEC passed--> " + SEC);
-    const stringtoMili = (alarm: String) => {
-        var i = 0;
-        var mili: number = 0; 
-        switch(i) {
-            case 0: 
-            mili += (parseInt(alarm[i]) * 10) * 60000;
-            i++;
-            case 1: 
-            mili+= (parseInt(alarm[i])) * 60000;  
-            i++;
-            case 2: 
-            i++;
-            case 3: 
-            mili += (parseInt(alarm[i]) * 10) * 1000;   
-            i++;
-            case 4:
-            mili += (parseInt(alarm[i])) * 1000;
-        }
-        return mili;
-    }
-   
 
     const handleTouch = () => {
         if (state == "Stop") {
@@ -102,7 +81,7 @@ export default function Timer( {SEC} : {SEC: number}) {
 const styles = StyleSheet.create({
     text: {
         justifyContent: 'center',
-        color: 'white',
+        color: '#3D5168',
         fontSize: 40,
         fontWeight: 'bold',
         textAlign: 'center',
@@ -122,7 +101,7 @@ const styles = StyleSheet.create({
         padding: 0,
     },
     pressableText: {
-        color: 'orange',
+        color: 'black',
         fontSize: 40,
         textAlign: 'center',
         fontFamily: 'AvenirNext-Bold',

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, Button, StyleSheet, FlatList, TouchableOpacity, SafeAreaView, StatusBar, } from 'react-native';
+import { Text, View, Button, StyleSheet, FlatList, TouchableOpacity, SafeAreaView, StatusBar, Pressable, Image } from 'react-native';
 import Dialog from "react-native-dialog";
 import Toast from 'react-native-toast-message';
+
 import { router, } from "expo-router";
 
 type ItemData = {
@@ -62,12 +63,12 @@ const HomePage = () => {
   const change_editmode = () => {
     if(editmode) {
       setEditmode(false);
-      showToast('Editmode Disabled');
+      showToast('Done Editing');
     }
 
     else {
       setEditmode(true);
-      showToast('Editmode Enabled');
+      showToast('Click the pencil when done editing');
     }
     }
     
@@ -80,7 +81,6 @@ const HomePage = () => {
     } 
     else {
       //route to exercise list, pass id along!  
-      
       router.push({pathname: "pages/exerciseList", params: {dayID: id, parentTitle: title}})
     }
   }
@@ -113,7 +113,7 @@ const HomePage = () => {
   }
   
   const renderItem = ({item}: {item: ItemData}) => {
-    const backgroundColor = item.id === selectedId ? '#170f7a' : 'orange';
+    const backgroundColor = item.id === selectedId ? '#3D5168' : 'grey'  ;
     const color = item.id === selectedId ? 'white' : 'black';
 
     return (
@@ -132,15 +132,28 @@ const HomePage = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Button title="Toggle EditMode" color="orange" onPress={ change_editmode }></Button>
+      <View style={styles.buttons}>
+      <Pressable onPress={change_editmode}>
+      <Image style={styles.image} 
+      source={require('./imgAssets/editAsset.png')}>
+      </Image>
+      </Pressable>      
+
+      <Pressable onPress={showDialog}>
+      <Image style={styles.image} 
+      source={require('./imgAssets/plus_Icon.png')}>
+      </Image>
+      </Pressable>
+      
+      </View>
       <FlatList
         data={DATA}
         renderItem={renderItem}
+        initialNumToRender={7}
         keyExtractor={item => item.id}
         extraData={selectedId}
       />
       <View style={styles.container}>
-      <Button title="Create a New Day" color='orange' onPress={showDialog} />
 
       {/* dialog for creating day */}
       <Dialog.Container visible={visible}>
@@ -172,14 +185,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: StatusBar.currentHeight || 0,
-    backgroundColor:'dodgerblue',
-    borderRadius: 10
+    backgroundColor:'beige',
+    borderRadius: 10,
+  },
+  image: {
+    width: 50,
+    height: 50,
+  },
+  buttons: {
+    padding: 20,
+    justifyContent: "space-around",
+    flexDirection: 'row',
   },
   item: {
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
-    borderRadius:20
+    borderRadius:20,
   },
   title: {
     fontSize: 32,

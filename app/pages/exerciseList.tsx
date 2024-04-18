@@ -1,4 +1,4 @@
-import { Button, Text, StyleSheet, FlatList, TouchableOpacity, SafeAreaView, StatusBar, View, } from 'react-native';
+import { Button, Text, StyleSheet, FlatList, TouchableOpacity, SafeAreaView, StatusBar, View, Pressable, Image } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import Toast from 'react-native-toast-message';
 import { router, useLocalSearchParams, } from "expo-router";
@@ -20,13 +20,14 @@ type ItemProps = {
     onPress: () => void;
     backgroundColor: string;
     color: string;
+    index: number;
   };
 
   const exerciseData: ItemData[] = [];
 
   const exerciseSubArr: ItemData[] = [];
 
-  const Item = ({item, onPress,  color, backgroundColor,}: ItemProps) => (
+  const Item = ({item, onPress,  color, backgroundColor, index: number}: ItemProps) => (
     <TouchableOpacity onPress={onPress} style={[styles.item, {backgroundColor}]}> 
       <Text style={[styles.title, {color}]}> { item.name} </Text>
       <View style={styles.listItems}> 
@@ -45,25 +46,27 @@ const exerciseList = () => {
 
     const [editmode, setEditmode] = useState(false);
     const [selectedID, setSelectedID] = useState('');
+    const [preSelectedID, setpreSelectedID] = useState('');
     const [visible, setVisible] = useState(false);
+    const [arrangeState, setarrangeState] = useState(false);
     const [marked, setMarked] = useState(0);     
     const [compVisible, setCompVisible] = useState(false);
     const [alarmString, setAlarmString] = useState('');
     const { dayID, parentTitle, newObj } = useLocalSearchParams();
     const { parentName, parentID, exerciseID, name, sets, targetReps, weight, restTime } = useLocalSearchParams();
       
-      if(parentTitle +'' != 'undefined') {
-        console.log("Parent Title!!!" + {parentTitle})
-      }
-      else {
+      if(parentTitle +'' == 'undefined') {
         router.push('pages/Home');
       }
+      
+      useEffect(() =>{
+        console.log("Selected ID: " + selectedID);
+      }, [selectedID]);
 
       //set valid parent ID
       var input: string;
         if( dayID + '' == 'undefined' ) {
           input = parentID + '';
-          console.log(parentID + '');
         }
         else {
           input = dayID + '';
@@ -73,7 +76,6 @@ const exerciseList = () => {
 
       exerciseData.forEach((exercise)=> {
         if(exercise.parentID == input) {
-          console.log("found a match " + exercise.name);
           exerciseSubArr.push(exercise);
         }
         
@@ -99,15 +101,6 @@ const exerciseList = () => {
       }
       }
 
-      if(dayID + '' != 'undefined') {
-        
-        console.log('here is your id -->' + dayID + 'here is parent title -->' + parentTitle);
-        
-      }
-      else if (parentID + '' != 'undefined') {
-        console.log("not undefined");
-      }
-
       const newItem: ItemData = {
         parentID: input,
         exerciseID: exerciseID +'',
@@ -120,20 +113,17 @@ const exerciseList = () => {
       }
 
       if(name +'' != 'undefined') {
-        console.log("in exercise List" + newItem.parentID);
       exerciseData.push(newItem)
       }
     
     const toggleEdit = () => {
         if (editmode) {
           setEditmode(false);
-          showToast("Edit Mode Disabled");
-          console.log("edit mode disabled")
+          showToast("Done Editing");
         }
         else {
           setEditmode(true);
-          console.log("Select an Item to DeletSelect an Item to Deletee")
-          showToast("Edit Mode Enabled");
+          showToast("Press the pencil when done editing");
         }
       }
 
@@ -152,7 +142,6 @@ const exerciseList = () => {
           return parentTitle;
         }
         else {
-          console.log('returning parent name->  ' + {parentName})
           return parentName;
         }
       }
@@ -178,6 +167,48 @@ const exerciseList = () => {
           setMarked(marked +1);
       }
 
+      const arrangeOrder = () => {
+        if(arrangeState) {
+          //logic for moving item behind
+          const itemIndex = exerciseData.findIndex((item) => item.exerciseID === preSelectedID);
+          const destIndex = exerciseData.findIndex((item) => item.exerciseID === selectedID);
+          const tempItem: ItemData = exerciseData.find((item) => item.exerciseID === preSelectedID)!;
+
+          if(itemIndex < destIndex) {
+            //if diff negative move diff - 1 positions to the right
+            for (var i = itemIndex; i <= destIndex; i++) {
+              if(i == destIndex) {
+                exerciseData[i] = tempItem;
+              }
+              else {
+                exerciseData[i] = exerciseData[i + 1];
+              }
+            }
+          }
+          else {
+            //diff positive move to the left
+            for(var i = itemIndex; i >= destIndex; i--) {
+              if(i == destIndex) {
+                exerciseData[i] = tempItem;
+              }
+              else {
+                exerciseData[i] = exerciseData[i - 1];
+              }
+            }
+          }
+          for (var i = 0; i < exerciseData.length; i++ ) {
+
+          }
+          setarrangeState(false);
+        }
+        else {
+          setarrangeState(true);
+          setpreSelectedID(selectedID);
+          showToast("Click reorder on another item to move it there");
+        }
+        hide_delDialog();
+      }
+
       const itemTouchevent = (id: string, item: ItemData) => {
         setSelectedID(id);
         if (editmode) {
@@ -193,7 +224,6 @@ const exerciseList = () => {
           item.marked = true;
           setMarked(marked + 1);
         }
-        console.log(item.marked);
         }
       }
 
@@ -217,7 +247,8 @@ const exerciseList = () => {
         }
         return mili;
         }
-      const renderItem = ({item}: {item: ItemData}) => {
+
+      const renderItem = ({item, index}: {item: ItemData; index: number}) => {
         var backgroundColor = 'red';
         if(editmode==false){
           if(item.marked) {
@@ -233,6 +264,7 @@ const exerciseList = () => {
         return (
           <Item
             item={item}
+            index={index}
             backgroundColor={backgroundColor}
             color={color}
             onPress={() => 
@@ -265,22 +297,39 @@ const exerciseList = () => {
     return (
         <SafeAreaView style={styles.container}>
           <Text style={styles.mainTitle}> { chooseParent_day() } </Text>
-      <View style={{flexDirection: 'row', justifyContent: 'space-evenly', padding: 20}}>
-      <Button title="Toggle Edit" color='orange' onPress={toggleEdit}></Button>
-      <Button title="Mark All incomplete" color='orange' onPress={unmarkAll}/>
-      </View>
         {timerComponent()}
       <FlatList
         data={exerciseSubArr}
         renderItem={renderItem}
         keyExtractor={item => item.exerciseID}
         extraData={selectedID}
+        
       />
       <>
+      <View style={{flexDirection: 'row', justifyContent: 'space-around', padding: 20 }}>
+      
+      <Pressable onPress={unmarkAll}>
+      <Image style={styles.image} 
+      source={require('./imgAssets/x_icon.png')}>
+      </Image>
+      </Pressable>      
+
+      <Pressable onPress={toggleEdit}>
+      <Image style={styles.image} 
+      source={require('./imgAssets/editAsset.png')}>
+      </Image>
+      </Pressable>      
+
+
+      <Pressable onPress={createExercise}>
+      <Image style={styles.image} 
+      source={require('./imgAssets/plus_Icon.png')}>
+      </Image>
+      </Pressable>      
+      </View>
       <Toast>
       </Toast>
       </>
-      <Button title='Create a new Exercise' color='orange' onPress={ createExercise }></Button>
      <Dialog.Container visible={compVisible}>
       <Dialog.Title>Start of Skip Timer?</Dialog.Title>
         <Dialog.Button label="Start Timer" onPress={handleCompleteTimer} />
@@ -291,6 +340,7 @@ const exerciseList = () => {
         <Dialog.Button label="Cancel" onPress={hide_delDialog} />
         <Dialog.Button label="Delete" onPress={handleDelete} />
         <Dialog.Button label="Edit" onPress={handleEdit}></Dialog.Button>
+        <Dialog.Button label="Reorder" onPress={arrangeOrder}></Dialog.Button>
       </Dialog.Container>
       </SafeAreaView>
     )};
@@ -299,7 +349,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: StatusBar.currentHeight || 0,
-        backgroundColor:'dodgerblue',
+        backgroundColor:'beige',
         borderRadius: 10
       },
       listItem: {
@@ -316,8 +366,10 @@ const styles = StyleSheet.create({
       },
       mainTitle: {
         fontSize:45,
+        padding: 20,
         fontWeight: 'bold',
         textAlign: 'center',
+        color: 'black',
         fontFamily: 'AvenirNext-Bold'
       },
       title: {
@@ -326,13 +378,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: 'AvenirNext-Bold'
         
-      },
-      centeredView: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 22,
-        backgroundColor:'#202020'
       },
       modalView: {
         margin: 20,
@@ -380,6 +425,10 @@ const styles = StyleSheet.create({
       listItems: {
         flexDirection: 'row',    
         justifyContent: 'space-around'
-      }
+      },
+      image: {
+        width: 50,
+        height: 50,
+      },
   }); 
 export default exerciseList;
