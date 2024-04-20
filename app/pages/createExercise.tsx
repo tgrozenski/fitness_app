@@ -216,8 +216,8 @@ const styles = StyleSheet.create({
       padding: 20,
     },
     pressables: {
-      color: '#007AFF', 
-      fontSize: 20,
+      color: 'beige', 
+      fontSize:20,
       padding: 20,
       textAlign: 'center',
     },
