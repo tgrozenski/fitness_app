@@ -1,14 +1,40 @@
-Fitness app designed for weightlifters to keep track of their exercises, weights, sets, reps, rest time. 
+## Fitness_App
 
-TO BE IMPLEMENTED
+Fitness app designed for weightlifters to keep track of their exercises, weights, sets, reps, rest time. Users can dynamically adjust their workout list as progress and changes are made, and use built in features like the rest timer and mark complete/incomplete durring their workout. 
 
-Interactive mode where users can step through workouts in a day with features such as:
--Workouts can be marked as complete when done
--This prompts for actual reps done and starts a timer with the rest time already set 
--Days can be reset after they are done with a click of a button 
+## Requirements
 
-**Main Technologies Used**
-- Expo
-- TypeScript
-- Expo Router
+- Install the latest version of
+  [Yarn](https://classic.yarnpkg.com/lang/en/docs/install)
+
+
+## Installation
+
+Clone the repository
+
+```bash
+git clone https://github.com/tgrozenski/fitness_app
+```
+
+Install the dependencies with Yarn
+
+```bash
+yarn install
+```
+
+**Features**
+- Exercise Day List with edit functionality for deleting days and creating new days
+
+- Users can create exercises with an exercise name, sets, weight, reps, and rest time
+
+- Exercise List with support for rearranging order, deleting, editing, and marking exercises complete/incomplete 
+
+- Built in rest timer 
+
+## Main Technologies Used
+- [Expo](https://expo.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
   
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
