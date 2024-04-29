@@ -4,6 +4,8 @@ import Toast from 'react-native-toast-message';
 import { router, useLocalSearchParams, } from "expo-router";
 import Dialog from "react-native-dialog";
 import Timer from '../components/timer';
+import Images from '../components/images'
+// import BackgroundTimer from 'react-native-background-timer';
 
 type ItemData = {
     parentID: string;
@@ -19,24 +21,27 @@ type ItemProps = {
     item: ItemData;
     onPress: () => void;
     backgroundColor: string;
-    color: string;
-    index: number;
+    image: any;
   };
+  
 
   const exerciseData: ItemData[] = [];
 
   const exerciseSubArr: ItemData[] = [];
 
-  const Item = ({item, onPress,  color, backgroundColor, index: number}: ItemProps) => (
-    <TouchableOpacity onPress={onPress} style={[styles.item, {backgroundColor}]}> 
-      <Text style={[styles.title, {color}]}> { item.name} </Text>
+  const Item = ({item, onPress,  backgroundColor, image: IMG}: ItemProps) => (
+    <TouchableOpacity onPress={onPress} style={[styles.item, {}]}> 
+      <Text style={{fontSize: 32, color:backgroundColor , fontWeight: 'bold', textAlign: 'center', fontFamily: 'AvenirNext-Bold'}}> { item.name} </Text>
+        <Image style={styles.image_small} 
+        source={IMG}>
+        </Image>
       <View style={styles.listItems}> 
-      <Text style={[styles.listItem, {color}]} >Sets: { item.sets} </Text>
-      <Text style={[styles.listItem, {color}]}>Rest Time: { item.restTime }</Text> 
+      <Text style={[textStyles(backgroundColor).listItem, ]} >Sets: { item.sets} </Text>
+      <Text style={[textStyles(backgroundColor).listItem, ]}>Rest Time: { item.restTime }</Text> 
       </View>
       <View style={ styles.listItems }>
-      <Text style={[styles.listItem, {color}]}>Target Reps: { item.targetReps} </Text>
-      <Text style={[styles.listItem, {color}]}>Target Weight: { item.weight }</Text>
+      <Text style={[textStyles(backgroundColor).listItem, ]}>Target Reps: { item.targetReps} </Text>
+      <Text style={[textStyles(backgroundColor).listItem, ]}>Target Weight: { item.weight }</Text>
       </View>
     </TouchableOpacity>
     
@@ -58,7 +63,11 @@ const exerciseList = () => {
       if(parentTitle +'' == 'undefined') {
         router.push('pages/Home');
       }
-      
+     
+      //Notification Logic goes here 
+      // checkPermissions();
+
+
       useEffect(() =>{
         console.log("Selected ID: " + selectedID);
       }, [selectedID]);
@@ -196,9 +205,6 @@ const exerciseList = () => {
               }
             }
           }
-          for (var i = 0; i < exerciseData.length; i++ ) {
-
-          }
           setarrangeState(false);
         }
         else {
@@ -248,25 +254,27 @@ const exerciseList = () => {
         return mili;
         }
 
-      const renderItem = ({item, index}: {item: ItemData; index: number}) => {
-        var backgroundColor = 'red';
+      const renderItem = ({item}: {item: ItemData; index: number}) => {
+        let backgroundColor = 'red';
+        let Image = Images.x_icon; 
+
         if(editmode==false){
           if(item.marked) {
             backgroundColor = 'green';
+            Image = Images.check_icon;
           }
           else {
             backgroundColor = 'red';
+            Image = Images.x_icon; 
           }
           
         }
-        const color = item.exerciseID === selectedID ? 'black' : 'white';
     
         return (
           <Item
             item={item}
-            index={index}
             backgroundColor={backgroundColor}
-            color={color}
+            image={Image}
             onPress={() => 
               itemTouchevent(item.exerciseID, item)}
           />
@@ -345,6 +353,24 @@ const exerciseList = () => {
       </SafeAreaView>
     )};
 
+const textStyles = (backgroundColor: string ) => StyleSheet.create({
+
+  listItem: {
+    color: backgroundColor, 
+    padding: 5,
+    textAlign: 'center',
+    borderRadius:20
+  },
+  title: {
+    fontSize: 32,
+    color: backgroundColor, 
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontFamily: 'AvenirNext-Bold'
+  },
+
+});
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -353,6 +379,7 @@ const styles = StyleSheet.create({
         borderRadius: 10
       },
       listItem: {
+        color: 'white', 
         padding: 5,
         textAlign: 'center',
         borderRadius:20
@@ -362,7 +389,7 @@ const styles = StyleSheet.create({
         marginVertical: 8,
         marginHorizontal: 16,
         borderRadius:20,
-        backgroundColor:'orange',
+        backgroundColor:'#3D5168',
       },
       mainTitle: {
         fontSize:45,
@@ -374,6 +401,7 @@ const styles = StyleSheet.create({
       },
       title: {
         fontSize: 32,
+        color: 'white',
         fontWeight: 'bold',
         textAlign: 'center',
         fontFamily: 'AvenirNext-Bold'
@@ -426,9 +454,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',    
         justifyContent: 'space-around'
       },
+      image_small: {
+        width: 35,
+        height: 35,
+      },
       image: {
         width: 50,
         height: 50,
-      },
+      }
   }); 
 export default exerciseList;

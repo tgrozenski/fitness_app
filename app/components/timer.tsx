@@ -1,6 +1,5 @@
-import { Text, StyleSheet, Pressable, View, } from 'react-native';
+import { Text, StyleSheet, Pressable, View, Alert, } from 'react-native';
 import React, { useState, useEffect } from 'react';
-
 
 export default function Timer( {SEC} : {SEC: number}) {
 
@@ -8,6 +7,7 @@ export default function Timer( {SEC} : {SEC: number}) {
     const[timeLeft, setTimeLeft] = useState(SEC);
     
     console.log("Timer Component is being called and rendered SEC passed--> " + SEC);
+
 
     const handleTouch = () => {
         if (state == "Stop") {

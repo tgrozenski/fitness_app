@@ -17,7 +17,7 @@ type exerciseData = {
     restTime: string;
   }
 
-  var count = 0; 
+  let count = 0; 
 
 const createExercisePage = () => {
     const [showPicker, setShowPicker] = useState(false);
@@ -127,7 +127,7 @@ const createExercisePage = () => {
             <Pressable onPress={ promptTarget }>
             <Text style={styles.pressables}>
             Target Reps: {target}
-           </Text>  
+        </Text>  
            </Pressable>
 
            <Divider />
