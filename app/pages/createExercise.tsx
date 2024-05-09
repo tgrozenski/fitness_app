@@ -20,7 +20,6 @@ type exerciseData = {
   let count = 0; 
 
 const createExercisePage = () => {
-    const [showPicker, setShowPicker] = useState(false);
     const [alarmString, setAlarmString] = useState('Untitled');
     const [showSets, setShowSets] = useState(false);
     const [sets, setSets] = useState(0);
@@ -77,6 +76,21 @@ const createExercisePage = () => {
     })
   }
 
+  const validateString = (input: string) => {
+    if(input.length > 30) {
+      input = "Undefined"
+    }
+    //tbi, Emoji detection, 
+  }
+
+  const validateInt = (num: number): boolean => {
+      let bool: boolean = Number.isInteger(num);
+      if(num > 101) {
+        bool = false;
+      }
+      return bool;   
+    }
+
   const formatTime = (hour: number, minute: number) => {
     var timeString = ''; 
     if(hour < 10) {
@@ -94,7 +108,6 @@ const createExercisePage = () => {
     }
     return timeString;
   }
-  
   
     return (
         <SafeAreaView style={styles.container}>
@@ -133,8 +146,6 @@ const createExercisePage = () => {
            <Divider />
             <Text style={styles.options}> Select your Rest Time: </Text>  
             <TimerPicker 
-                  hideMinutes={showPicker}
-                  hideSeconds={showPicker}
                   onDurationChange={ (pickedDuration) => {
                     handleTimePicker(pickedDuration.minutes, pickedDuration.seconds); } }
                   padWithNItems={3}
