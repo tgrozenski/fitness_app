@@ -5,17 +5,9 @@ import Dialog from "react-native-dialog";
 import { Divider } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import Toast from 'react-native-toast-message';
+import regEx from './emoji';
 import { router, useLocalSearchParams, } from "expo-router";
-
-type exerciseData = {
-    parentID: string;
-    exerciseID:string;
-    name: string;
-    sets: number;
-    targetReps: number;
-    weight: string;
-    restTime: string;
-  }
+import exerciseData from '../components/exerciseData';
 
   let count = 0; 
 
@@ -30,7 +22,6 @@ const createExercisePage = () => {
     const [showWeight, setShowWeight] = useState(false);
     const [weight, setWeight] = useState('Undefined');
 
-    const { dayID, parentName, } = useLocalSearchParams();
     
   const handleTimePicker = (minute: number, second: number) => {
     const alarmFormat = formatTime(minute, second);
@@ -49,24 +40,28 @@ const createExercisePage = () => {
   const submitTarget = () => {setShowTarget(false);}
 
   const saveData = () => {
+
+
     const newObj: exerciseData = {
-      parentID: dayID + '',
+      parentID: lastParentId,
       exerciseID: count + '',
       name: name,
       sets: sets,
       targetReps: target,
       weight: weight,
-      restTime: alarmString
+      restTime: alarmString,
+      marked: false,
     };
+    
+    //add to both global arrays
+    globalThis.currentExercise = newObj;
+    console.log("******" + globalThis.currentExercise.name);
+
     count++;
     
-    console.log('In createExercise dayID is  ' + dayID );
     showToast('Exercise Saved');
-    console.log(newObj);
-    router.replace({ pathname:'pages/exerciseList', params: { 
-      parentID: newObj.parentID, exerciseID: newObj.exerciseID, name: name, 
-      sets: newObj.sets, targetReps: newObj.targetReps, weight: newObj.weight, 
-      restTime: newObj.restTime, parentName: parentName } });
+    router.replace({ pathname:'pages/exerciseList'} );
+
     }
 
   const showToast = (message: string) => {
@@ -76,19 +71,24 @@ const createExercisePage = () => {
     })
   }
 
-  const validateString = (input: string) => {
+  const validateString = (input: string): string => {
     if(input.length > 30) {
       input = "Undefined"
     }
-    //tbi, Emoji detection, 
+    return input;
   }
 
-  const validateInt = (num: number): boolean => {
-      let bool: boolean = Number.isInteger(num);
+  const validateInt = (num: number): number => {
       if(num > 101) {
-        bool = false;
+       return 0; 
       }
-      return bool;   
+      else if(Number.isInteger(num)) {
+        return num;
+      }
+      else {
+        return 0;
+      }
+       return num;  
     }
 
   const formatTime = (hour: number, minute: number) => {
@@ -178,13 +178,16 @@ const createExercisePage = () => {
             Save Exercise
             </Text> 
             </Pressable>
-        
+
+              <Toast>
+
+              </Toast>
 
             <Dialog.Container visible={showSets}>
                 <Dialog.Title>Exercise sets?</Dialog.Title>
                 <Dialog.Input 
                 placeholder="Enter the number of sets"
-                onChangeText={sets => setSets(parseInt(sets))}>
+                onChangeText={sets => setSets((parseInt(sets)))}>
                 </Dialog.Input>
                 <Dialog.Button label="Submit" onPress={submitSets} />
             </Dialog.Container>
@@ -192,7 +195,7 @@ const createExercisePage = () => {
                 <Dialog.Title>Exercise name?</Dialog.Title>
                 <Dialog.Input 
                 placeholder="Enter the exercise name!"
-                onChangeText={name => setName(name)}>
+                onChangeText={name => setName((name))}>
                 </Dialog.Input>
                 <Dialog.Button label="Submit" onPress={submitName} />
             </Dialog.Container>
@@ -200,7 +203,7 @@ const createExercisePage = () => {
                 <Dialog.Title>Target Reps?</Dialog.Title>
                 <Dialog.Input 
                 placeholder="Enter the target rep number!"
-                onChangeText={target => setTarget(parseInt(target))}>
+                onChangeText={target => setTarget((parseInt(target)))}>
                 </Dialog.Input>
                 <Dialog.Button label="Submit" onPress={submitTarget} />
             </Dialog.Container>
@@ -208,7 +211,7 @@ const createExercisePage = () => {
                 <Dialog.Title>Weight number?</Dialog.Title>
                 <Dialog.Input 
                 placeholder="Enter the target weight!"
-                onChangeText={weight => setWeight(weight)}>
+                onChangeText={weight => setWeight((weight))}>
                 </Dialog.Input>
                 <Dialog.Button label="Submit" onPress={submitWeight} />
             </Dialog.Container>

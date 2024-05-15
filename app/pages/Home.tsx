@@ -2,24 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, Button, StyleSheet, FlatList, TouchableOpacity, SafeAreaView, StatusBar, Pressable, Image } from 'react-native';
 import Dialog from "react-native-dialog";
 import Toast from 'react-native-toast-message';
-
+import parentData from "../components/parentData" 
 import { router, } from "expo-router";
 
-type ItemData = {
-  id: string;
-  title: string;
-};
 
-const DATA: ItemData[] = [];
+const DATA: parent[] = [];
 
-type ItemProps = {
-  item: ItemData;
+type parentProps= {
+  item: parentData;
   onPress: () => void;
   backgroundColor: string;
   textColor: string;
 };
 
-const Item = ({item, onPress, backgroundColor, textColor}: ItemProps) => (
+const Item = ({item, onPress, backgroundColor, textColor}: parentProps) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, {backgroundColor}]}>
     <Text style={[styles.title, {color: textColor}]}>{item.title}</Text>
   </TouchableOpacity>
@@ -81,7 +77,9 @@ const HomePage = () => {
     } 
     else {
       //route to exercise list, pass id along!  
-      router.push({pathname: "pages/exerciseList", params: {dayID: id, parentTitle: title}})
+      globalThis.lastParent = title;
+      globalThis.lastParentId = id;
+      router.push({pathname: "pages/exerciseList"}) 
     }
   }
 
@@ -89,7 +87,7 @@ const HomePage = () => {
   
   const handleSubmit = () => {
     setVisible(false);
-    const newItem: ItemData = {
+    const newItem: parentData = {
       id: '' + counter, 
       title: text,
     };
@@ -102,17 +100,13 @@ const HomePage = () => {
 
     const index = DATA.findIndex((item) => item.id === selectedId);
     if (index !== -1) {
-      // Remove the object from the array using splice()
       DATA.splice(index, 1);
       setdel_Dialog(false);
-      return true; // Indicate successful deletion
-    } else {
-      // Item not found
-      return false; // Indicate unsuccessful deletion
-    }
+      return true; 
+    } 
   }
   
-  const renderItem = ({item}: {item: ItemData}) => {
+  const renderItem = ({item}: {item: parentData}) => {
     const backgroundColor = item.id === selectedId ? '#3D5168' : 'grey'  ;
     const color = item.id === selectedId ? 'white' : 'black';
 
@@ -179,7 +173,6 @@ const HomePage = () => {
     </SafeAreaView>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {

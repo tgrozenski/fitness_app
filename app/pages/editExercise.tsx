@@ -7,17 +7,7 @@ import { Divider } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import Toast from 'react-native-toast-message';
 import { router, useLocalSearchParams, } from "expo-router";
-
-type exerciseData = {
-    parentID: string;
-    exerciseID:string;
-    name: string;
-    sets: number;
-    targetReps: number;
-    weight: string;
-    restTime: string;
-    
-  }
+import exerciseData from '../components/exerciseData';
 
 const createExercisePage = () => {
   
@@ -58,11 +48,14 @@ const createExercisePage = () => {
       targetReps: target,
       weight: weight + '',
       restTime: alarmString + '',
+      marked: false,
     };
-    router.replace({ pathname:'pages/exerciseList', params: { 
-      parentID: newObj.parentID, exerciseID: newObj.exerciseID, name: name, 
-      sets: newObj.sets, targetReps: newObj.targetReps, weight: newObj.weight, 
-      restTime: newObj.restTime, newObj } });
+
+    //add to global config
+
+    globalThis.currentExercise = newObj;
+    
+    router.replace({ pathname:'pages/exerciseList' });
     
   }
 

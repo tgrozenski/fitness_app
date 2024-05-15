@@ -5,29 +5,14 @@ import { router, useLocalSearchParams, } from "expo-router";
 import Dialog from "react-native-dialog";
 import Timer from '../components/timer';
 import Images from '../components/images'
-// import BackgroundTimer from 'react-native-background-timer';
+import exerciseData from '../components/exerciseData';
 
-type ItemData = {
-    parentID: string;
-    exerciseID: string;
-    name: string;
-    sets: number;
-    targetReps: number;
-    weight: string;
-    restTime: string;
-    marked: boolean;
-}
 type ItemProps = {
-    item: ItemData;
+    item: exerciseData;
     onPress: () => void;
     backgroundColor: string;
     image: any;
   };
-  
-
-  const exerciseData: ItemData[] = [];
-
-  const exerciseSubArr: ItemData[] = [];
 
   const Item = ({item, onPress,  backgroundColor, image: IMG}: ItemProps) => (
     <TouchableOpacity onPress={onPress} style={[styles.item, {}]}> 
@@ -57,37 +42,33 @@ const exerciseList = () => {
     const [marked, setMarked] = useState(0);     
     const [compVisible, setCompVisible] = useState(false);
     const [alarmString, setAlarmString] = useState('');
-    const { dayID, parentTitle, newObj } = useLocalSearchParams();
-    const { parentName, parentID, exerciseID, name, sets, targetReps, weight, restTime } = useLocalSearchParams();
       
-      if(parentTitle +'' == 'undefined') {
-        router.push('pages/Home');
-      }
-     
-      //Notification Logic goes here 
-      // checkPermissions();
+    //setting valid title & id
+    const currentParent: string  = globalThis.lastParent ?? "Click the Pencil to Add a new Day";
+    const currentParentID: string  = globalThis.lastParentId ?? "7979";
 
+    const exerciseArr: exerciseData[] = [];
+    const exerciseSubArr: exerciseData[] = [];
 
       useEffect(() =>{
         console.log("Selected ID: " + selectedID);
       }, [selectedID]);
 
-      //set valid parent ID
-      var input: string;
-        if( dayID + '' == 'undefined' ) {
-          input = parentID + '';
-        }
-        else {
-          input = dayID + '';
-        }
-      
       exerciseSubArr.length = 0;
 
-      exerciseData.forEach((exercise)=> {
-        if(exercise.parentID == input) {
-          exerciseSubArr.push(exercise);
-        }
+      //add latest exercise
+      if(!!globalThis.currentExercise) {
+        exerciseArr.push(globalThis.currentExercise);
+        exerciseSubArr.push(globalThis.currentExercise);
         
+        globalThis.currentExercise = null;
+      }
+
+      exerciseArr.forEach((exercise) => {
+        if(exercise.parentID == currentParentID) {
+          exerciseSubArr.push(exercise);
+          console.log("pushed object " + exercise);
+        }
       });
 
       const hide_delDialog = () => {
@@ -97,33 +78,17 @@ const exerciseList = () => {
       const handleDelete = () => {
         setVisible(false);
         
-      const index = exerciseData.findIndex((item) => item.exerciseID === selectedID);
+      const index = exerciseArr.findIndex((item) => item.exerciseID === selectedID);
       const index2 = exerciseSubArr.findIndex((item) => item.exerciseID === selectedID);
       
       if (index !== -1) {
-        exerciseData.splice(index, 1);
+        exerciseArr.splice(index, 1);
         exerciseSubArr.splice(index2, 1);
-        return true; 
       } else {
         console.log("Item not found!")
-        return false; 
       }
       }
 
-      const newItem: ItemData = {
-        parentID: input,
-        exerciseID: exerciseID +'',
-        name: name +'',
-        sets: parseInt(sets +''),
-        targetReps: parseInt(targetReps + ''),
-        weight: weight +'',
-        restTime: restTime + '',
-        marked:false
-      }
-
-      if(name +'' != 'undefined') {
-      exerciseData.push(newItem)
-      }
     
     const toggleEdit = () => {
         if (editmode) {
@@ -145,18 +110,9 @@ const exerciseList = () => {
         const item = exerciseSubArr.find((item) => item.exerciseID === selectedID);
         setAlarmString(item?.restTime + '');
     }
-    
-    const chooseParent_day = () => {
-        if (parentTitle != 'undefined') {
-          return parentTitle;
-        }
-        else {
-          return parentName;
-        }
-      }
 
       const createExercise = () => {
-        router.push({pathname: 'pages/createExercise', params: { dayID: dayID}})
+        router.push({pathname: 'pages/createExercise'})
       }
 
       const unmarkAll = () => {
@@ -170,27 +126,25 @@ const exerciseList = () => {
         setVisible(false)
         const Item = exerciseSubArr.find((item) => item.exerciseID === selectedID);
         handleDelete();
-        router.push({pathname: "pages/editExercise", 
-          params: {parentID: Item?.parentID, itemID: Item?.exerciseID, itemName: Item?.name, itemSets: Item?.sets, itemWeight: Item?.weight, 
-            itemReps: Item?.targetReps, itemRestTime: Item?.restTime}})
-          setMarked(marked +1);
+        router.push({pathname: "pages/editExercise"})
+        setMarked(marked +1);
       }
 
       const arrangeOrder = () => {
         if(arrangeState) {
           //logic for moving item behind
-          const itemIndex = exerciseData.findIndex((item) => item.exerciseID === preSelectedID);
-          const destIndex = exerciseData.findIndex((item) => item.exerciseID === selectedID);
-          const tempItem: ItemData = exerciseData.find((item) => item.exerciseID === preSelectedID)!;
+          const itemIndex = exerciseArr.findIndex((item) => item.exerciseID === preSelectedID);
+          const destIndex = exerciseArr.findIndex((item) => item.exerciseID === selectedID);
+          const tempItem: exerciseData = exerciseArr.find((item) => item.exerciseID === preSelectedID)!;
 
           if(itemIndex < destIndex) {
             //if diff negative move diff - 1 positions to the right
             for (var i = itemIndex; i <= destIndex; i++) {
               if(i == destIndex) {
-                exerciseData[i] = tempItem;
+                exerciseArr[i] = tempItem;
               }
               else {
-                exerciseData[i] = exerciseData[i + 1];
+                exerciseArr[i] = exerciseArr[i + 1];
               }
             }
           }
@@ -198,10 +152,10 @@ const exerciseList = () => {
             //diff positive move to the left
             for(var i = itemIndex; i >= destIndex; i--) {
               if(i == destIndex) {
-                exerciseData[i] = tempItem;
+                exerciseArr[i] = tempItem;
               }
               else {
-                exerciseData[i] = exerciseData[i - 1];
+                exerciseArr[i] = exerciseArr[i - 1];
               }
             }
           }
@@ -215,7 +169,7 @@ const exerciseList = () => {
         hide_delDialog();
       }
 
-      const itemTouchevent = (id: string, item: ItemData) => {
+      const itemTouchevent = (id: string, item: exerciseData) => {
         setSelectedID(id);
         if (editmode) {
         setVisible(true);
@@ -254,7 +208,7 @@ const exerciseList = () => {
         return mili;
         }
 
-      const renderItem = ({item}: {item: ItemData; index: number}) => {
+      const renderItem = ({item}: {item: exerciseData; }) => {
         let backgroundColor = 'red';
         let Image = Images.x_icon; 
 
@@ -304,10 +258,10 @@ const exerciseList = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-          <Text style={styles.mainTitle}> { chooseParent_day() } </Text>
+          <Text style={styles.mainTitle}> { currentParent } </Text>
         {timerComponent()}
       <FlatList
-        data={exerciseSubArr}
+        data={ exerciseSubArr }
         renderItem={renderItem}
         keyExtractor={item => item.exerciseID}
         extraData={selectedID}
