@@ -1,5 +1,9 @@
-import { Text, StyleSheet, Pressable, View, Alert, } from 'react-native';
+import { Text, StyleSheet, Pressable, View, Alert, Image } from 'react-native';
 import React, { useState, useEffect } from 'react';
+import images from '../components/images';
+
+
+let image = images.stop_icon;
 
 export default function Timer( {SEC} : {SEC: number}) {
 
@@ -8,15 +12,15 @@ export default function Timer( {SEC} : {SEC: number}) {
     
     console.log("Timer Component is being called and rendered SEC passed--> " + SEC);
 
-
     const handleTouch = () => {
         if (state == "Stop") {
             setState("Start");
+            image = images.play_icon;
             setTimeLeft(0); 
-            
         }
         else {
             setState("Stop");
+            image = images.stop_icon;
             setTimeLeft(SEC);
         }
     }
@@ -73,7 +77,8 @@ export default function Timer( {SEC} : {SEC: number}) {
             <Text style={styles.text}>{Timer_inner()}</Text>
             <View></View>
             <Pressable onPress={handleTouch}>
-                <Text style={styles.pressableText}>{state}</Text> 
+                {/* <Text style={styles.pressableText}>{state}</Text>  */}
+                <Image style={styles.image} source={image}></Image>
             </Pressable>
         </View>
     );
@@ -105,5 +110,9 @@ const styles = StyleSheet.create({
         fontSize: 40,
         textAlign: 'center',
         fontFamily: 'AvenirNext-Bold',
-    }
+    },
+    image: {
+        width: 35,
+        height: 35,
+      }
 });

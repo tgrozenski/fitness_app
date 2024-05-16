@@ -4,4 +4,5 @@ interface parentData {
     id: string;
 }
 
+
 export default parentData;
