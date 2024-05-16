@@ -1,27 +1,29 @@
 import React, { useState, } from 'react';
+import * as validate from '../components/validatorModule';
 import { Button, StyleSheet, SafeAreaView, Text, View, Pressable } from 'react-native';
 import { TimerPicker} from "react-native-timer-picker";
 import Dialog from "react-native-dialog";
 import { Divider } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import Toast from 'react-native-toast-message';
-import regEx from './emoji';
 import { router, useLocalSearchParams, } from "expo-router";
 import exerciseData from '../components/exerciseData';
 
-  let count = 0; 
+const validator: validate.App.validator = new validate.App.validator();
 
 const createExercisePage = () => {
-    const [alarmString, setAlarmString] = useState('Untitled');
+    const [alarmString, setAlarmString] = useState('Not Set');
     const [showSets, setShowSets] = useState(false);
     const [sets, setSets] = useState(0);
     const [showName, setShowsName] = useState(false);
-    const [name, setName] = useState('Untitled');
+    const [name, setName] = useState('Not Set');
     const [showTarget, setShowTarget] = useState(false);
     const [target, setTarget] = useState(0);
     const [showWeight, setShowWeight] = useState(false);
-    const [weight, setWeight] = useState('Undefined');
+    const [weight, setWeight] = useState('Not Set');
 
+    globalThis.gCount = globalThis.gCount ?? 0;
+    let count = globalThis.gCount; 
     
   const handleTimePicker = (minute: number, second: number) => {
     const alarmFormat = formatTime(minute, second);
@@ -70,26 +72,6 @@ const createExercisePage = () => {
       text1: message,
     })
   }
-
-  const validateString = (input: string): string => {
-    if(input.length > 30) {
-      input = "Undefined"
-    }
-    return input;
-  }
-
-  const validateInt = (num: number): number => {
-      if(num > 101) {
-       return 0; 
-      }
-      else if(Number.isInteger(num)) {
-        return num;
-      }
-      else {
-        return 0;
-      }
-       return num;  
-    }
 
   const formatTime = (hour: number, minute: number) => {
     var timeString = ''; 
@@ -187,7 +169,7 @@ const createExercisePage = () => {
                 <Dialog.Title>Exercise sets?</Dialog.Title>
                 <Dialog.Input 
                 placeholder="Enter the number of sets"
-                onChangeText={sets => setSets((parseInt(sets)))}>
+                onChangeText={sets => setSets(validator.validateInt((parseInt(sets))))}>
                 </Dialog.Input>
                 <Dialog.Button label="Submit" onPress={submitSets} />
             </Dialog.Container>
@@ -195,7 +177,7 @@ const createExercisePage = () => {
                 <Dialog.Title>Exercise name?</Dialog.Title>
                 <Dialog.Input 
                 placeholder="Enter the exercise name!"
-                onChangeText={name => setName((name))}>
+                onChangeText={name => setName(validator.validateString(name))}>
                 </Dialog.Input>
                 <Dialog.Button label="Submit" onPress={submitName} />
             </Dialog.Container>
@@ -203,7 +185,7 @@ const createExercisePage = () => {
                 <Dialog.Title>Target Reps?</Dialog.Title>
                 <Dialog.Input 
                 placeholder="Enter the target rep number!"
-                onChangeText={target => setTarget((parseInt(target)))}>
+                onChangeText={target => setTarget(validator.validateInt((parseInt(target))))}>
                 </Dialog.Input>
                 <Dialog.Button label="Submit" onPress={submitTarget} />
             </Dialog.Container>
@@ -211,7 +193,7 @@ const createExercisePage = () => {
                 <Dialog.Title>Weight number?</Dialog.Title>
                 <Dialog.Input 
                 placeholder="Enter the target weight!"
-                onChangeText={weight => setWeight((weight))}>
+                onChangeText={weight => setWeight(validator.validateString(weight))}>
                 </Dialog.Input>
                 <Dialog.Button label="Submit" onPress={submitWeight} />
             </Dialog.Container>

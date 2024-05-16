@@ -4,9 +4,12 @@ import Dialog from "react-native-dialog";
 import Toast from 'react-native-toast-message';
 import parentData from "../components/parentData" 
 import { router, } from "expo-router";
+import * as validate from '../components/validatorModule';
 
 
-const DATA: parent[] = [];
+const DATA: parentData[] = [];
+
+const validator: validate.App.validator = new validate.App.validator();
 
 type parentProps= {
   item: parentData;
@@ -154,7 +157,7 @@ const HomePage = () => {
         <Dialog.Title>Create A new Day</Dialog.Title>
         <Dialog.Input 
         placeholder="Enter the name of your day!"
-        onChangeText={text => setText(text)}>
+        onChangeText={text => setText(validator.validateString(text))}>
         </Dialog.Input>
         <Dialog.Button label="Cancel" onPress={handleCancel} />
         <Dialog.Button label="Submit" onPress={handleSubmit} />

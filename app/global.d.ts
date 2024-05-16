@@ -11,6 +11,7 @@ interface parent {
     var lastParent: string;
     var lastParentId: string;
     var currentParent: parent;
+    var gCount: number;
 
 }
     

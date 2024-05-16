@@ -32,6 +32,9 @@ type ItemProps = {
     
   );
 
+const exerciseArr: exerciseData[] = [];
+const exerciseSubArr: exerciseData[] = [];
+
 const exerciseList = () => {
 
     const [editmode, setEditmode] = useState(false);
@@ -47,9 +50,7 @@ const exerciseList = () => {
     const currentParent: string  = globalThis.lastParent ?? "Click the Pencil to Add a new Day";
     const currentParentID: string  = globalThis.lastParentId ?? "7979";
 
-    const exerciseArr: exerciseData[] = [];
-    const exerciseSubArr: exerciseData[] = [];
-
+      //*** DO NOT FORGET TO REMOVE THIS useEffect ***/
       useEffect(() =>{
         console.log("Selected ID: " + selectedID);
       }, [selectedID]);
@@ -59,8 +60,7 @@ const exerciseList = () => {
       //add latest exercise
       if(!!globalThis.currentExercise) {
         exerciseArr.push(globalThis.currentExercise);
-        exerciseSubArr.push(globalThis.currentExercise);
-        
+        console.log("exercise pushed! " + globalThis.currentExercise);
         globalThis.currentExercise = null;
       }
 
