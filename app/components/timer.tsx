@@ -46,15 +46,13 @@ export default function Timer( {SEC} : {SEC: number}) {
                 <Text style={styles.text}> {secondstoString(timeLeft)}</Text>
             </View>
         );
-
     }
 
     const secondstoString = (seconds: number) => {
-        
-        var string  = '';
-        var minutes;
+        let string  = '';
+        let minutes;
 
-        if(seconds >= 60) {
+        if (seconds >= 60) {
         minutes = Math.floor(seconds / 60);
         seconds = seconds - Math.floor(minutes * 60);
         string += minutes

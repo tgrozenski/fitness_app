@@ -214,14 +214,13 @@ const exerciseList = () => {
 
         if(editmode==false){
           if(item.marked) {
-            backgroundColor = 'green';
+            backgroundColor = '#29EB18';
             Image = Images.check_icon;
           }
           else {
             backgroundColor = 'red';
             Image = Images.x_icon; 
           }
-          
         }
     
         return (
@@ -265,7 +264,6 @@ const exerciseList = () => {
         renderItem={renderItem}
         keyExtractor={item => item.exerciseID}
         extraData={selectedID}
-        
       />
       <>
       <View style={{flexDirection: 'row', justifyContent: 'space-around', padding: 20 }}>

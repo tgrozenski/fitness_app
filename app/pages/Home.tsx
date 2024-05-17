@@ -4,7 +4,7 @@ import Dialog from "react-native-dialog";
 import Toast from 'react-native-toast-message';
 import parentData from "../components/parentData" 
 import { router, } from "expo-router";
-import * as validate from '../components/validatorModule';
+import * as validate from '../modules/validatorModule';
 
 
 const DATA: parentData[] = [];

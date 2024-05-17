@@ -1,6 +1,6 @@
 import React, { useState, } from 'react';
-import * as validate from '../components/validatorModule';
-import { Button, StyleSheet, SafeAreaView, Text, View, Pressable } from 'react-native';
+import * as validate from '../modules/validatorModule';
+import { StyleSheet, SafeAreaView, Text, View, Pressable } from 'react-native';
 import { TimerPicker} from "react-native-timer-picker";
 import Dialog from "react-native-dialog";
 import { Divider } from 'react-native-paper';
@@ -23,7 +23,6 @@ const createExercisePage = () => {
     const [weight, setWeight] = useState('Not Set');
 
     globalThis.gCount = globalThis.gCount ?? 0;
-    let count = globalThis.gCount; 
     
   const handleTimePicker = (minute: number, second: number) => {
     const alarmFormat = formatTime(minute, second);
@@ -46,7 +45,7 @@ const createExercisePage = () => {
 
     const newObj: exerciseData = {
       parentID: lastParentId,
-      exerciseID: count + '',
+      exerciseID: globalThis.gCount + '',
       name: name,
       sets: sets,
       targetReps: target,
@@ -59,7 +58,7 @@ const createExercisePage = () => {
     globalThis.currentExercise = newObj;
     console.log("******" + globalThis.currentExercise.name);
 
-    count++;
+    globalThis.gCount++;
     
     showToast('Exercise Saved');
     router.replace({ pathname:'pages/exerciseList'} );
