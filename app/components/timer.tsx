@@ -1,7 +1,13 @@
-import { Text, StyleSheet, Pressable, View, Alert, Image } from 'react-native';
+import { Text, StyleSheet, Pressable, View, Alert, Image, Vibration} from 'react-native';
 import React, { useState, useEffect } from 'react';
 import images from '../components/images';
+import * as notification from '../modules/notificationManager';
+import * as Notifications from 'expo-notifications';
+import { router } from "expo-router"
+import * as Haptics from 'expo-haptics';
 
+const notificationManager: notification.NotificationManager.Notifs = new notification.NotificationManager.Notifs;
+notificationManager.registerForPushNotificationsAsync();
 
 let image = images.stop_icon;
 
@@ -9,7 +15,7 @@ export default function Timer( {SEC} : {SEC: number}) {
 
     const [state, setState] = useState("Stop");
     const[timeLeft, setTimeLeft] = useState(SEC);
-    
+
     console.log("Timer Component is being called and rendered SEC passed--> " + SEC);
 
     const handleTouch = () => {
@@ -29,7 +35,13 @@ export default function Timer( {SEC} : {SEC: number}) {
         console.log("Timer Inner Activated " + timeLeft );
         
         useEffect(() => {
-        if (!timeLeft) {return;}
+        if (!timeLeft) { 
+            notificationManager.schedulePushNotification();
+            setTimeout(function(){
+                Vibration.vibrate(3000);
+            }, 1000);
+            return;
+        }
         console.log("time left " + timeLeft);
 
         const intervalID = setInterval(() => {

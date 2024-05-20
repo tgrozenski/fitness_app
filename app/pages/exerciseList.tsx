@@ -6,6 +6,12 @@ import Dialog from "react-native-dialog";
 import Timer from '../components/timer';
 import Images from '../components/images'
 import exerciseData from '../components/exerciseData';
+import * as notification from '../modules/notificationManager';
+
+
+const notificationManager: notification.NotificationManager.Notifs = new notification.NotificationManager.Notifs;
+const exerciseArr: exerciseData[] = [];
+const exerciseSubArr: exerciseData[] = [];
 
 type ItemProps = {
     item: exerciseData;
@@ -32,8 +38,6 @@ type ItemProps = {
     
   );
 
-const exerciseArr: exerciseData[] = [];
-const exerciseSubArr: exerciseData[] = [];
 
 const exerciseList = () => {
 
@@ -49,6 +53,8 @@ const exerciseList = () => {
     //setting valid title & id
     const currentParent: string  = globalThis.lastParent ?? "Click the Pencil to Add a new Day";
     const currentParentID: string  = globalThis.lastParentId ?? "7979";
+
+
 
       //*** DO NOT FORGET TO REMOVE THIS useEffect ***/
       useEffect(() =>{

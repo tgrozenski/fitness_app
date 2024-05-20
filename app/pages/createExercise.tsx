@@ -44,7 +44,7 @@ const createExercisePage = () => {
 
 
     const newObj: exerciseData = {
-      parentID: lastParentId,
+      parentID: globalThis.lastParentId,
       exerciseID: globalThis.gCount + '',
       name: name,
       sets: sets,

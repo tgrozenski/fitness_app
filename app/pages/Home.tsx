@@ -3,14 +3,16 @@ import { Text, View, Button, StyleSheet, FlatList, TouchableOpacity, SafeAreaVie
 import Dialog from "react-native-dialog";
 import Toast from 'react-native-toast-message';
 import parentData from "../components/parentData" 
-import { router, } from "expo-router";
+import { router } from "expo-router";
 import * as validate from '../modules/validatorModule';
+import * as notification from '../modules/notificationManager';
 
 
 const DATA: parentData[] = [];
 
 const validator: validate.App.validator = new validate.App.validator();
-
+const notificationManager: notification.NotificationManager.Notifs = new notification.NotificationManager.Notifs;
+notificationManager.registerForPushNotificationsAsync();
 type parentProps= {
   item: parentData;
   onPress: () => void;
