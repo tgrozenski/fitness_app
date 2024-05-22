@@ -6,6 +6,7 @@ import parentData from "../components/parentData"
 import { router } from "expo-router";
 import * as validate from '../modules/validatorModule';
 import * as notification from '../modules/notificationManager';
+import * as TaskManager from 'expo-task-manager';
 
 
 const DATA: parentData[] = [];
