@@ -1,0 +1,42 @@
+				APP NOTES
+
+- fix routing to initial wrong page
+
+- Storing persistant data 
+
+- Get timer working offscreen (Expo TaskManager)
+
+- TaskManagerTaskBodyExecutionInfo to get app state
+
+- TaskManager.defineTask(taskName, taskExecutor)
+
+- Implement success haptics when checking off an Item
+
+- Implement haptics for errors where necessary
+
+- Expo KeepAwake is a potential workaround to the app not working while screen is off
+
+
+
+
+				Considerations for Deployment
+
+- App Logo and icon needs to be changed for standalone app
+
+- EAS build might be required
+
+- Apple developer account required for app store
+
+- Testing on android Device
+
+
+APP COLOR SCHEME
+
+Background: beige 
+
+Default Item: grey
+
+Item Selected:'#3D5168'
+
+Assets: black 
+ 

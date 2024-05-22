@@ -93,7 +93,7 @@ const createExercisePage = () => {
     return (
         <SafeAreaView style={styles.container}>
             <View>
-              <Text style={{padding: 10}}></Text> 
+              <Text style={{padding: 5}}></Text> 
             <Pressable onPress={ promptName }> 
             <Text style={styles.pressables}>
             Click To Set Exercise Name: {name}

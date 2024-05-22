@@ -8,6 +8,7 @@ declare global {
     var lastParentId: string;
     var currentParent: parentData;
     var gCount: number;
+    var appState: string;
 
 }
     
