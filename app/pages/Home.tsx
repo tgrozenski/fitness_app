@@ -11,6 +11,20 @@ import * as TaskManager from 'expo-task-manager';
 
 const DATA: parentData[] = [];
 
+const func = () => {
+  console.log("Task manager Returned True");
+}
+
+const timerFunct = () => {
+  console.log("Timer Function called in background");
+}
+
+const taskname = "BackgroundTimer";
+TaskManager.isAvailableAsync().then(func);
+if(!TaskManager.isTaskDefined(taskname)) {
+  TaskManager.defineTask(taskname, timerFunct);
+}
+
 const validator: validate.App.validator = new validate.App.validator();
 const notificationManager: notification.NotificationManager.Notifs = new notification.NotificationManager.Notifs;
 notificationManager.registerForPushNotificationsAsync();
