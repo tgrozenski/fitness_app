@@ -5,6 +5,8 @@ import * as notification from '../modules/notificationManager';
 import * as Notifications from 'expo-notifications';
 import { router } from "expo-router"
 import * as Haptics from 'expo-haptics';
+import BackgroundTimer from 'react-native-background-timer';
+
 
 const notificationManager: notification.NotificationManager.Notifs = new notification.NotificationManager.Notifs;
 notificationManager.registerForPushNotificationsAsync();
@@ -30,10 +32,9 @@ export default function Timer( {SEC} : {SEC: number}) {
             setTimeLeft(SEC);
         }
     }
-   
+
     const Timer_inner = ( ) => {
         console.log("Timer Inner Activated " + timeLeft );
-        
         useEffect(() => {
         if (!timeLeft) { 
             notificationManager.schedulePushNotification();
@@ -42,7 +43,6 @@ export default function Timer( {SEC} : {SEC: number}) {
             }, 1000);
             return;
         }
-        console.log("time left " + timeLeft);
 
         const intervalID = setInterval(() => {
             setTimeLeft(timeLeft - 1);
@@ -51,7 +51,7 @@ export default function Timer( {SEC} : {SEC: number}) {
         return () => clearInterval(intervalID);
 
         }, [timeLeft]);
-
+        
         return (
             <View style={styles.container}>
                 <Text style={styles.text_black }>{secondstoString(SEC)}</Text>

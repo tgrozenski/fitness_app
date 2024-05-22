@@ -7,6 +7,7 @@ import Timer from '../components/timer';
 import Images from '../components/images'
 import exerciseData from '../components/exerciseData';
 import * as notification from '../modules/notificationManager';
+import BackgroundTimer from 'react-native-background-timer';
 
 
 const notificationManager: notification.NotificationManager.Notifs = new notification.NotificationManager.Notifs;
@@ -242,6 +243,21 @@ const exerciseList = () => {
 
     const timerComponent = () => {
       const seconds: number = stringtoMili(alarmString + '') / 1000; 
+      let sec2 =seconds - 1; 
+
+      if(!Number.isNaN(sec2)) {
+        let number = sec2;
+        BackgroundTimer.stop();
+        BackgroundTimer.start();
+        const intervalID = BackgroundTimer.setInterval(() => {
+              if(number <= 0) {
+                BackgroundTimer.clearInterval(intervalID);
+              }
+              console.log('tac ' + number);
+              number--;
+        }, 1000);
+        BackgroundTimer.stop();
+      }
       console.log("Timer component: alarmstring-> " + alarmString + " seconds var --> " + seconds);
       if (seconds > 0) {
         return(

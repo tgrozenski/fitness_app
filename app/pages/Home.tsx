@@ -7,7 +7,6 @@ import { router } from "expo-router";
 import * as validate from '../modules/validatorModule';
 import * as notification from '../modules/notificationManager';
 
-
 const DATA: parentData[] = [];
 
 const validator: validate.App.validator = new validate.App.validator();

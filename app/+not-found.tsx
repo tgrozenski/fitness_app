@@ -1,8 +1,8 @@
 import React from "react";
 import { Redirect } from "expo-router";
 
-const Index = () => {
+const notFound = () => {
 
   return <Redirect href="pages/Home" />;
 };
-export default Index;
+export default notFound;
