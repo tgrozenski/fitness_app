@@ -183,6 +183,7 @@ const exerciseList = () => {
         else {
         if(item.marked) {
           setMarked(marked + 1);
+
           item.marked = false;
         }
         else {
