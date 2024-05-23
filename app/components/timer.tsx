@@ -1,19 +1,15 @@
 import { Text, StyleSheet, Pressable, View, Alert, Image, Vibration} from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import images from '../components/images';
 import * as notification from '../modules/notificationManager';
-import * as Notifications from 'expo-notifications';
-import { router } from "expo-router"
-import * as Haptics from 'expo-haptics';
 import BackgroundTimer from 'react-native-background-timer';
-
 
 const notificationManager: notification.NotificationManager.Notifs = new notification.NotificationManager.Notifs;
 notificationManager.registerForPushNotificationsAsync();
 
 let image = images.stop_icon;
-
 export default function Timer( {SEC} : {SEC: number}) {
+
 
     const [state, setState] = useState("Stop");
     const[timeLeft, setTimeLeft] = useState(SEC);
@@ -25,22 +21,27 @@ export default function Timer( {SEC} : {SEC: number}) {
             setState("Start");
             image = images.play_icon;
             setTimeLeft(0); 
+            BackgroundTimer.clearInterval(globalThis.intervalID);
         }
         else {
             setState("Stop");
             image = images.stop_icon;
             setTimeLeft(SEC);
+            startBackground();
         }
     }
 
-    const Timer_inner = ( ) => {
+    const Timer_inner = () => {
         console.log("Timer Inner Activated " + timeLeft );
         useEffect(() => {
         if (!timeLeft) { 
+            console.log("Ring Ring Timer Complete");
             notificationManager.schedulePushNotification();
             setTimeout(function(){
                 Vibration.vibrate(3000);
             }, 1000);
+            setState("Start");
+            image = images.play_icon;
             return;
         }
 
@@ -81,6 +82,22 @@ export default function Timer( {SEC} : {SEC: number}) {
         }
         return string;
     }
+
+    const startBackground = () => {
+    let number = SEC - 1;
+    const intervalID = BackgroundTimer.setInterval(() => {
+            if(number <= 0) {
+            BackgroundTimer.clearInterval(intervalID);
+            BackgroundTimer.stop();
+            }
+            console.log('tac ' + number);
+            number--;
+    }, 1000);
+        globalThis.intervalID = intervalID;
+        BackgroundTimer.start(intervalID);
+    }
+
+
     
     return (
         <View style={styles.container}>

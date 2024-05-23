@@ -6,12 +6,10 @@ import Dialog from "react-native-dialog";
 import Timer from '../components/timer';
 import Images from '../components/images'
 import exerciseData from '../components/exerciseData';
-import * as notification from '../modules/notificationManager';
 import BackgroundTimer from 'react-native-background-timer';
 import * as Haptics from 'expo-haptics';
 
 
-const notificationManager: notification.NotificationManager.Notifs = new notification.NotificationManager.Notifs;
 const exerciseArr: exerciseData[] = [];
 const exerciseSubArr: exerciseData[] = [];
 
@@ -39,7 +37,6 @@ type ItemProps = {
     </TouchableOpacity>
     
   );
-
 
 const exerciseList = () => {
 
@@ -248,21 +245,21 @@ const exerciseList = () => {
       const seconds: number = stringtoMili(alarmString + '') / 1000; 
       let sec2 =seconds - 1; 
 
-      if(!Number.isNaN(sec2)) {
-        let number = sec2;
-        BackgroundTimer.stop();
-        BackgroundTimer.start();
-        const intervalID = BackgroundTimer.setInterval(() => {
-              if(number <= 0) {
-                BackgroundTimer.clearInterval(intervalID);
-              }
-              console.log('tac ' + number);
-              number--;
-        }, 1000);
-        BackgroundTimer.stop();
-      }
       console.log("Timer component: alarmstring-> " + alarmString + " seconds var --> " + seconds);
       if (seconds > 0) {
+      // if(!Number.isNaN(sec2)) {
+      //   let number = sec2;
+      //   BackgroundTimer.stop();
+      //   BackgroundTimer.start();
+      //   const intervalID = BackgroundTimer.setInterval(() => {
+      //         if(number <= 0) {
+      //           BackgroundTimer.clearInterval(intervalID);
+      //         }
+      //         console.log('tac ' + number);
+      //         number--;
+      //   }, 1000);
+      //   BackgroundTimer.stop();
+      // }
         return(
         <Timer SEC={seconds} ></Timer>  
         );

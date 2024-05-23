@@ -9,6 +9,7 @@ declare global {
     var currentParent: parentData;
     var gCount: number;
     var appState: string;
+    var intervalID: number;
 
 }
     
