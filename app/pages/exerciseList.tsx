@@ -8,6 +8,7 @@ import Images from '../components/images'
 import exerciseData from '../components/exerciseData';
 import * as notification from '../modules/notificationManager';
 import BackgroundTimer from 'react-native-background-timer';
+import * as Haptics from 'expo-haptics';
 
 
 const notificationManager: notification.NotificationManager.Notifs = new notification.NotificationManager.Notifs;
@@ -184,10 +185,12 @@ const exerciseList = () => {
         else {
         if(item.marked) {
           setMarked(marked + 1);
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
           item.marked = false;
         }
         else {
           setCompVisible(true);
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
           item.marked = true;
           setMarked(marked + 1);
         }
