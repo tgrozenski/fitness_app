@@ -7,23 +7,15 @@ import { router } from "expo-router";
 import * as validate from '../modules/validatorModule';
 import * as notification from '../modules/notificationManager';
 import * as TaskManager from 'expo-task-manager';
+import daysArray from '../daysArray';
 
 
-const DATA: parentData[] = [];
+const DATA: parentData[] = daysArray;
 
-const func = () => {
-  console.log("Task manager Returned True");
-}
-
-const timerFunct = () => {
-  console.log("Timer Function called in background");
-}
-
-const taskname = "BackgroundTimer";
-TaskManager.isAvailableAsync().then(func);
-if(!TaskManager.isTaskDefined(taskname)) {
-  TaskManager.defineTask(taskname, timerFunct);
-}
+// daysArray.forEach(
+// function(item) {
+//   DATA.push(item);
+// });
 
 const validator: validate.App.validator = new validate.App.validator();
 const notificationManager: notification.NotificationManager.Notifs = new notification.NotificationManager.Notifs;
