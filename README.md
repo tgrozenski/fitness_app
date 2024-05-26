@@ -1,14 +1,18 @@
 ## Fitness_App
 
-Fitness app designed for weightlifters to keep track of their exercises, weights, sets, reps, rest time. Users can dynamically adjust their workout list as progress and changes are made, and use built in features like the rest timer and mark complete/incomplete durring their workout. 
+Fitness app designed for weightlifters to keep track of their exercises, weights, sets, reps, rest time. Users can dynamically adjust their workout list as progress is made, and use built in features like the rest timer and the ability to mark exercises as complete and incomplete during the workout. 
 
 ## Requirements
 
 - Install the latest version of
   [Yarn](https://classic.yarnpkg.com/lang/en/docs/install)
 
+- Install Expo Cli
+  [Expo](https://docs.expo.dev/more/expo-cli/#installation)
 
-## Installation
+- Install the [Expo Go](https://expo.dev/go) App on Android or IOS  
+   
+## Preview the App 
 
 Clone the repository
 
@@ -16,10 +20,10 @@ Clone the repository
 git clone https://github.com/tgrozenski/fitness_app
 ```
 
-Install the dependencies with Yarn
+Start the Expo Go server
 
 ```bash
-yarn install
+cd fitness_app && npx expo start
 ```
 
 **Features**
@@ -31,9 +35,13 @@ yarn install
 
 - Built in rest timer 
 
+- Push Notifications and Vibration on rest timer completion
+
+
 ## Main Technologies Used
 - [Expo](https://expo.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
+- [React Native](https://reactnative.dev/)
   
 ## License
 
