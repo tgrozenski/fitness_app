@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect} from 'react';
 import { Button, StyleSheet, SafeAreaView, Text, View, Pressable } from 'react-native';
 import { TimerPicker} from "react-native-timer-picker";
@@ -8,20 +7,24 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Toast from 'react-native-toast-message';
 import { router, useLocalSearchParams, } from "expo-router";
 import exerciseData from '../components/exerciseData';
+import * as validate from '../modules/validatorModule';
+
+const validator: validate.App.validator = new validate.App.validator();
 
 const createExercisePage = () => {
-  
-    const { parentID, itemID, itemName, itemReps, itemRestTime, itemSets, itemWeight } = useLocalSearchParams();
+
     const [showPicker, setShowPicker] = useState(false);
-    const [alarmString, setAlarmString] = useState(itemRestTime);
+    const [alarmString, setAlarmString] = useState(globalThis.lastEdit?.restTime);
     const [showSets, setShowSets] = useState(false);
-    const [sets, setSets] = useState(Number(itemSets));
+    const [sets, setSets] = useState((globalThis.lastEdit?.sets));
     const [showName, setShowsName] = useState(false);
-    const [name, setName] = useState(itemName);
+    const [name, setName] = useState(globalThis.lastEdit?.name);
+    console.log("GLOBAL NAME " + globalThis.lastEdit?.name);
+    console.log("NAME: " + name);
     const [showTarget, setShowTarget] = useState(false);
-    const [target, setTarget] = useState(Number(itemReps));
+    const [target, setTarget] = useState((globalThis.lastEdit?.sets));
     const [showWeight, setShowWeight] = useState(false);
-    const [weight, setWeight] = useState(itemWeight);
+    const [weight, setWeight] = useState(globalThis.lastEdit?.weight);
     
   const handleTimePicker = (minute: number, second: number) => {
     const alarmFormat = formatTime(minute, second);
@@ -41,18 +44,17 @@ const createExercisePage = () => {
 
   const saveData = () => {
     const newObj: exerciseData = {
-      parentID: parentID + '',
-      exerciseID: itemID + '', 
+      parentID: globalThis.lastParentId,
+      exerciseID: globalThis.lastEdit?.exerciseID + '', 
       name: name + '',
-      sets: sets,
-      targetReps: target,
+      sets: Number(sets),
+      targetReps: Number(target),
       weight: weight + '',
       restTime: alarmString + '',
       marked: false,
     };
 
     //add to global config
-
     globalThis.currentExercise = newObj;
     
     router.replace({ pathname:'pages/exerciseList' });
@@ -155,7 +157,7 @@ const createExercisePage = () => {
                 <Dialog.Title>Exercise sets?</Dialog.Title>
                 <Dialog.Input 
                 placeholder="Enter the number of sets"
-                onChangeText={sets  => setSets(parseInt(sets))}>
+                onChangeText={sets  => setSets(validator.validateInt(parseInt(sets)))}>
                 </Dialog.Input>
                 <Dialog.Button label="Submit" onPress={submitSets} />
             </Dialog.Container>
@@ -163,7 +165,7 @@ const createExercisePage = () => {
                 <Dialog.Title>Exercise name?</Dialog.Title>
                 <Dialog.Input 
                 placeholder="Enter the exercise name!"
-                onChangeText={name => setName(name)}>
+                onChangeText={name => setName(validator.validateString(name))}>
                 </Dialog.Input>
                 <Dialog.Button label="Submit" onPress={submitName} />
             </Dialog.Container>
@@ -171,7 +173,7 @@ const createExercisePage = () => {
                 <Dialog.Title>Target Reps?</Dialog.Title>
                 <Dialog.Input 
                 placeholder="Enter the target rep number!"
-                onChangeText={target => setTarget(parseInt(target))}>
+                onChangeText={target => setTarget(validator.validateInt(parseInt(target)))}>
                 </Dialog.Input>
                 <Dialog.Button label="Submit" onPress={submitTarget} />
             </Dialog.Container>
@@ -179,7 +181,7 @@ const createExercisePage = () => {
                 <Dialog.Title>Weight number?</Dialog.Title>
                 <Dialog.Input 
                 placeholder="Enter the target weight!"
-                onChangeText={weight => setWeight(weight)}>
+                onChangeText={weight => setWeight(validator.validateString(weight))}>
                 </Dialog.Input>
                 <Dialog.Button label="Submit" onPress={submitWeight} />
             </Dialog.Container>

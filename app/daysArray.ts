@@ -7,11 +7,11 @@ const daysArray: parentData[] = [
    }, 
    {
     id: '101',
-    title: "Shoulders & Arms"
+    title: "Chest & Back"
    },
    {
     id:'102',
-    title:"Chest & Back"
+    title:"Shoulders & Arms"
    }
 
 ]

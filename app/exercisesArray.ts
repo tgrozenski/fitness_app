@@ -118,16 +118,6 @@ const exerciseArray: exerciseData[] = [
     },
     {
       parentID: "102",
-      exerciseID: '211',
-      name: "Shoulder Press",
-      sets: 3,
-      targetReps: 8,
-      weight: "2 Plates (100)",
-      restTime: "03:00",
-      marked: false,
-    },
-    {
-      parentID: "102",
       exerciseID: '212',
       name: "Tricep Push Down",
       sets: 3,

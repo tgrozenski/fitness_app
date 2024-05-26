@@ -53,8 +53,6 @@ const exerciseList = () => {
     const currentParent: string  = globalThis.lastParent ?? "Click the Pencil to Add a new Day";
     const currentParentID: string  = globalThis.lastParentId ?? "7979";
 
-
-
       //*** DO NOT FORGET TO REMOVE THIS useEffect ***/
       useEffect(() =>{
         console.log("Selected ID: " + selectedID);
@@ -72,7 +70,6 @@ const exerciseList = () => {
       exerciseArr.forEach((exercise) => {
         if(exercise.parentID == currentParentID) {
           exerciseSubArr.push(exercise);
-          console.log("pushed object " + exercise);
         }
       });
 
@@ -130,9 +127,12 @@ const exerciseList = () => {
 
       const handleEdit = () => {
         setVisible(false)
-        const Item = exerciseSubArr.find((item) => item.exerciseID === selectedID);
+        const Item: exerciseData = (exerciseSubArr.find((item) => item.exerciseID === selectedID))!; 
+        globalThis.lastEdit= Item;
+        console.log(globalThis.lastEdit.name+ " <------");
+        globalThis.editing = true;
         handleDelete();
-        router.push({pathname: "pages/editExercise"})
+        router.push({pathname: 'pages/editExercise' })
         setMarked(marked +1);
       }
 

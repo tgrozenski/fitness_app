@@ -8,6 +8,8 @@ declare global {
     var lastParentId: string;
     var currentParent: parentData;
     var gCount: number;
+    var editing: boolean;
+    var editExercise: exerciseData;
 
 }
     
