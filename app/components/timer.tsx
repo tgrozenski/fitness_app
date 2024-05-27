@@ -1,10 +1,7 @@
 import { Text, StyleSheet, Pressable, View, Alert, Image, Vibration} from 'react-native';
 import React, { useState, useEffect } from 'react';
 import images from '../components/images';
-import * as notification from '../modules/notificationManager';
-import * as Notifications from 'expo-notifications';
-import { router } from "expo-router"
-import * as Haptics from 'expo-haptics';
+import * as notification from '../modules/Notification Manager'
 
 const notificationManager: notification.NotificationManager.Notifs = new notification.NotificationManager.Notifs;
 notificationManager.registerForPushNotificationsAsync();
